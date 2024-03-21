@@ -1,0 +1,47 @@
+default_language_version:
+  python: python3.10
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: mixed-line-ending
+      - id: check-case-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.254
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 23.11.0
+    hooks:
+      - id: black-jupyter
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.0.1
+    hooks:
+      - id: mypy
+        entry: mypy
+        additional_dependencies:
+        - hypothesis==6.59.0
+        - numpy==1.23.5
+        - pandas==1.5.2
+        - pyspark==3.3.1
+        - pyspark-gcs==2.1.6.1
+        - traitlets>=5.13.0
+        - types-PyYAML==6.0.12.2
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.6.3
+    hooks:
+      - id: nbqa-mypy
+        additional_dependencies:
+        - hypothesis==6.59.0
+        - mypy==1.0.1
+        - numpy==1.23.5
+        - pandas==1.5.2
+        - pyspark==3.3.1
+        - pyspark-gcs==2.1.6.1
+        - traitlets>=5.13.0
+        - types-PyYAML==6.0.12.2

@@ -1,0 +1,826 @@
+
+% -----------------------------------------------------------------------------
+% Data sources
+% -----------------------------------------------------------------------------
+
+@article {PMID:36370105,
+	Title = {The STRING database in 2023: protein-protein association networks and functional enrichment analyses for any sequenced genome of interest},
+	Author = {Szklarczyk, Damian and Kirsch, Rebecca and Koutrouli, Mikaela and Nastou, Katerina and Mehryary, Farrokh and Hachilif, Radja and Gable, Annika L and Fang, Tao and Doncheva, Nadezhda T and Pyysalo, Sampo and Bork, Peer and Jensen, Lars J and von Mering, Christian},
+	DOI = {10.1093/nar/gkac1000},
+	Number = {D1},
+	Volume = {51},
+	Month = {January},
+	Year = {2023},
+	Journal = {Nucleic acids research},
+	ISSN = {0305-1048},
+	Pages = {D638—D646},
+	Abstract = {Much of the complexity within cells arises from functional and regulatory interactions among proteins. The core of these interactions is increasingly known, but novel interactions continue to be discovered, and the information remains scattered across different database resources, experimental modalities and levels of mechanistic detail. The STRING database (https://string-db.org/) systematically collects and integrates protein-protein interactions-both physical interactions as well as functional associations. The data originate from a number of sources: automated text mining of the scientific literature, computational interaction predictions from co-expression, conserved genomic context, databases of interaction experiments and known complexes/pathways from curated sources. All of these interactions are critically assessed, scored, and subsequently automatically transferred to less well-studied organisms using hierarchical orthology information. The data can be accessed via the website, but also programmatically and via bulk downloads. The most recent developments in STRING (version 12.0) are: (i) it is now possible to create, browse and analyze a full interaction network for any novel genome of interest, by submitting its complement of encoded proteins, (ii) the co-expression channel now uses variational auto-encoders to predict interactions, and it covers two new sources, single-cell RNA-seq and experimental proteomics data and (iii) the confidence in each experimentally derived interaction is now estimated based on the detection method used, and communicated to the user in the web-interface. Furthermore, STRING continues to enhance its facilities for functional enrichment analysis, which are now fully available also for user-submitted genomes.},
+	URL = {https://europepmc.org/articles/PMC9825434},
+}
+
+@article {PMID:24234437,
+	Title = {ClinVar: public archive of relationships among sequence variation and human phenotype},
+	Author = {Landrum, Melissa J and Lee, Jennifer M and Riley, George R and Jang, Wonhee and Rubinstein, Wendy S and Church, Deanna M and Maglott, Donna R},
+	DOI = {10.1093/nar/gkt1113},
+	Number = {Database issue},
+	Volume = {42},
+	Month = {January},
+	Year = {2014},
+	Journal = {Nucleic acids research},
+	ISSN = {0305-1048},
+	Pages = {D980—5},
+	Abstract = {ClinVar (http://www.ncbi.nlm.nih.gov/clinvar/) provides a freely available archive of reports of relationships among medically important variants and phenotypes. ClinVar accessions submissions reporting human variation, interpretations of the relationship of that variation to human health and the evidence supporting each interpretation. The database is tightly coupled with dbSNP and dbVar, which maintain information about the location of variation on human assemblies. ClinVar is also based on the phenotypic descriptions maintained in MedGen (http://www.ncbi.nlm.nih.gov/medgen). Each ClinVar record represents the submitter, the variation and the phenotype, i.e. the unit that is assigned an accession of the format SCV000000000.0. The submitter can update the submission at any time, in which case a new version is assigned. To facilitate evaluation of the medical importance of each variant, ClinVar aggregates submissions with the same variation/phenotype combination, adds value from other NCBI databases, assigns a distinct accession of the format RCV000000000.0 and reports if there are conflicting clinical interpretations. Data in ClinVar are available in multiple formats, including html, download as XML, VCF or tab-delimited subsets. Data from ClinVar are provided as annotation tracks on genomic RefSeqs and are used in tools such as Variation Reporter (http://www.ncbi.nlm.nih.gov/variation/tools/reporter), which reports what is known about variation based on user-supplied locations.},
+	URL = {https://europepmc.org/articles/PMC3965032},
+}
+
+@article {PMID:15608251,
+	Title = {Online Mendelian Inheritance in Man (OMIM), a knowledgebase of human genes and genetic disorders},
+	Author = {Hamosh, Ada and Scott, Alan F and Amberger, Joanna S and Bocchini, Carol A and McKusick, Victor A},
+	DOI = {10.1093/nar/gki033},
+	Number = {Database issue},
+	Volume = {33},
+	Month = {January},
+	Year = {2005},
+	Journal = {Nucleic acids research},
+	ISSN = {0305-1048},
+	Pages = {D514—7},
+	Abstract = {Online Mendelian Inheritance in Man (OMIM) is a comprehensive, authoritative and timely knowledgebase of human genes and genetic disorders compiled to support human genetics research and education and the practice of clinical genetics. Started by Dr Victor A. McKusick as the definitive reference Mendelian Inheritance in Man, OMIM (http://www.ncbi.nlm.nih.gov/omim/) is now distributed electronically by the National Center for Biotechnology Information, where it is integrated with the Entrez suite of databases. Derived from the biomedical literature, OMIM is written and edited at Johns Hopkins University with input from scientists and physicians around the world. Each OMIM entry has a full-text summary of a genetically determined phenotype and/or gene and has numerous links to other genetic databases such as DNA and protein sequence, PubMed references, general and locus-specific mutation databases, HUGO nomenclature, MapViewer, GeneTests, patient support groups and many others. OMIM is an easy and straightforward portal to the burgeoning information in human genetics.},
+	URL = {https://europepmc.org/articles/PMC539987},
+}
+
+
+@article{Koscielny2017-rr,
+  title    = "Open Targets: a platform for therapeutic target identification
+              and validation",
+  author   = "Koscielny, Gautier and An, Peter and Carvalho-Silva, Denise and
+              Cham, Jennifer A and Fumis, Luca and Gasparyan, Rippa and Hasan,
+              Samiul and Karamanis, Nikiforos and Maguire, Michael and Papa,
+              Eliseo and Pierleoni, Andrea and Pignatelli, Miguel and Platt,
+              Theo and Rowland, Francis and Wankar, Priyanka and Bento, A
+              Patr{\'\i}cia and Burdett, Tony and Fabregat, Antonio and Forbes,
+              Simon and Gaulton, Anna and Gonzalez, Cristina Yenyxe and
+              Hermjakob, Henning and Hersey, Anne and Jupe, Steven and Kafkas,
+              {\c S}enay and Keays, Maria and Leroy, Catherine and Lopez,
+              Francisco-Javier and Magarinos, Maria Paula and Malone, James and
+              McEntyre, Johanna and Munoz-Pomer Fuentes, Alfonso and O'Donovan,
+              Claire and Papatheodorou, Irene and Parkinson, Helen and Palka,
+              Barbara and Paschall, Justin and Petryszak, Robert and
+              Pratanwanich, Naruemon and Sarntivijal, Sirarat and Saunders,
+              Gary and Sidiropoulos, Konstantinos and Smith, Thomas and Sondka,
+              Zbyslaw and Stegle, Oliver and Tang, Y Amy and Turner, Edward and
+              Vaughan, Brendan and Vrousgou, Olga and Watkins, Xavier and
+              Martin, Maria-Jesus and Sanseau, Philippe and Vamathevan, Jessica
+              and Birney, Ewan and Barrett, Jeffrey and Dunham, Ian",
+  journal  = "Nucleic Acids Res.",
+  volume   =  45,
+  number   = "D1",
+  pages    = "D985--D994",
+  month    =  jan,
+  year     =  2017,
+  language = "en"
+}
+
+
+% -----------------------------------------------------------------------------
+% Target-specific data sources
+% -----------------------------------------------------------------------------
+
+@article {PMID:32461654,
+	Title = {The mutational constraint spectrum quantified from variation in 141,456 humans},
+	Author = {Karczewski, Konrad J and Francioli, Laurent C and Tiao, Grace and Cummings, Beryl B and Alföldi, Jessica and Wang, Qingbo and Collins, Ryan L and Laricchia, Kristen M and Ganna, Andrea and Birnbaum, Daniel P and Gauthier, Laura D and Brand, Harrison and Solomonson, Matthew and Watts, Nicholas A and Rhodes, Daniel and Singer-Berk, Moriel and England, Eleina M and Seaby, Eleanor G and Kosmicki, Jack A and Walters, Raymond K and Tashman, Katherine and Farjoun, Yossi and Banks, Eric and Poterba, Timothy and Wang, Arcturus and Seed, Cotton and Whiffin, Nicola and Chong, Jessica X and Samocha, Kaitlin E and Pierce-Hoffman, Emma and Zappala, Zachary and O'Donnell-Luria, Anne H and Minikel, Eric Vallabh and Weisburd, Ben and Lek, Monkol and Ware, James S and Vittal, Christopher and Armean, Irina M and Bergelson, Louis and Cibulskis, Kristian and Connolly, Kristen M and Covarrubias, Miguel and Donnelly, Stacey and Ferriera, Steven and Gabriel, Stacey and Gentry, Jeff and Gupta, Namrata and Jeandet, Thibault and Kaplan, Diane and Llanwarne, Christopher and Munshi, Ruchi and Novod, Sam and Petrillo, Nikelle and Roazen, David and Ruano-Rubio, Valentin and Saltzman, Andrea and Schleicher, Molly and Soto, Jose and Tibbetts, Kathleen and Tolonen, Charlotte and Wade, Gordon and Talkowski, Michael E and {Genome Aggregation Database Consortium} and Neale, Benjamin M and Daly, Mark J and MacArthur, Daniel G},
+	DOI = {10.1038/s41586-020-2308-7},
+	Number = {7809},
+	Volume = {581},
+	Month = {May},
+	Year = {2020},
+	Journal = {Nature},
+	ISSN = {0028-0836},
+	Pages = {434—443},
+	Abstract = {Genetic variants that inactivate protein-coding genes are a powerful source of information about the phenotypic consequences of gene disruption: genes that are crucial for the function of an organism will be depleted of such variants in natural populations, whereas non-essential genes will tolerate their accumulation. However, predicted loss-of-function variants are enriched for annotation errors, and tend to be found at extremely low frequencies, so their analysis requires careful variant annotation and very large sample sizes&lt;sup&gt;1&lt;/sup&gt;. Here we describe the aggregation of 125,748 exomes and 15,708 genomes from human sequencing studies into the Genome Aggregation Database (gnomAD). We identify 443,769 high-confidence predicted loss-of-function variants in this cohort after filtering for artefacts caused by sequencing and annotation errors. Using an improved model of human mutation rates, we classify human protein-coding genes along a spectrum that represents tolerance to inactivation, validate this classification using data from model organisms and engineered human cells, and show that it can be used to improve the power of gene discovery for both common and rare diseases.},
+	URL = {https://europepmc.org/articles/PMC7334197},
+}
+
+@article {PMID:25613900,
+	Title = {Proteomics. Tissue-based map of the human proteome},
+	Author = {Uhlén, Mathias and Fagerberg, Linn and Hallström, Björn M and Lindskog, Cecilia and Oksvold, Per and Mardinoglu, Adil and Sivertsson, Åsa and Kampf, Caroline and Sjöstedt, Evelina and Asplund, Anna and Olsson, IngMarie and Edlund, Karolina and Lundberg, Emma and Navani, Sanjay and Szigyarto, Cristina Al-Khalili and Odeberg, Jacob and Djureinovic, Dijana and Takanen, Jenny Ottosson and Hober, Sophia and Alm, Tove and Edqvist, Per-Henrik and Berling, Holger and Tegel, Hanna and Mulder, Jan and Rockberg, Johan and Nilsson, Peter and Schwenk, Jochen M and Hamsten, Marica and von Feilitzen, Kalle and Forsberg, Mattias and Persson, Lukas and Johansson, Fredric and Zwahlen, Martin and von Heijne, Gunnar and Nielsen, Jens and Pontén, Fredrik},
+	DOI = {10.1126/science.1260419},
+	Number = {6220},
+	Volume = {347},
+	Month = {January},
+	Year = {2015},
+	Journal = {Science (New York, N.Y.)},
+	ISSN = {0036-8075},
+	Pages = {1260419},
+	Abstract = {Resolving the molecular details of proteome variation in the different tissues and organs of the human body will greatly increase our knowledge of human biology and disease. Here, we present a map of the human tissue proteome based on an integrated omics approach that involves quantitative transcriptomics at the tissue and organ level, combined with tissue microarray-based immunohistochemistry, to achieve spatial localization of proteins down to the single-cell level. Our tissue-based analysis detected more than 90% of the putative protein-coding genes. We used this approach to explore the human secretome, the membrane proteome, the druggable proteome, the cancer proteome, and the metabolic functions in 32 different tissues and organs. All the data are integrated in an interactive Web-based database that allows exploration of individual proteins, as well as navigation of global expression patterns, in all major tissues and organs in the human body.},
+	URL = {https://doi.org/10.1126/science.1260419},
+}
+
+% -----------------------------------------------------------------------------
+% Genetics-led target prioritization and validation
+% -----------------------------------------------------------------------------
+
+@article{Sadler2023-xd,
+  title    = "Multi-layered genetic approaches to identify approved drug
+              targets",
+  author   = "Sadler, Marie C and Auwerx, Chiara and Deelen, Patrick and
+              Kutalik, Zolt{\'a}n",
+  journal  = "Cell Genom.",
+  volume   =  3,
+  number   =  7,
+  pages    = "100341",
+  month    =  jul,
+  year     =  2023,
+  keywords = "Exome; GWAS; drug target discovery; eQTL; gene prioritization;
+              network diffusion; pQTL",
+  language = "en"
+}
+
+@article {PMID:31253980,
+	Title = {A genetics-led approach defines the drug target landscape of 30 immune-related traits},
+	Author = {Fang, Hai and {ULTRA-DD Consortium} and De Wolf, Hans and Knezevic, Bogdan and Burnham, Katie L and Osgood, Julie and Sanniti, Anna and Lledó Lara, Alicia and Kasela, Silva and De Cesco, Stephane and Wegner, Jörg K and Handunnetthi, Lahiru and McCann, Fiona E and Chen, Liye and Sekine, Takuya and Brennan, Paul E and Marsden, Brian D and Damerell, David and O'Callaghan, Chris A and Bountra, Chas and Bowness, Paul and Sundström, Yvonne and Milani, Lili and Berg, Louise and Göhlmann, Hinrich W and Peeters, Pieter J and Fairfax, Benjamin P and Sundström, Michael and Knight, Julian C},
+	DOI = {10.1038/s41588-019-0456-1},
+	Number = {7},
+	Volume = {51},
+	Month = {July},
+	Year = {2019},
+	Journal = {Nature genetics},
+	ISSN = {1061-4036},
+	Pages = {1082—1091},
+	Abstract = {Most candidate drugs currently fail later-stage clinical trials, largely due to poor prediction of efficacy on early target selection&lt;sup&gt;1&lt;/sup&gt;. Drug targets with genetic support are more likely to be therapeutically valid&lt;sup&gt;2,3&lt;/sup&gt;, but the translational use of genome-scale data such as from genome-wide association studies for drug target discovery in complex diseases remains challenging&lt;sup&gt;4-6&lt;/sup&gt;. Here, we show that integration of functional genomic and immune-related annotations, together with knowledge of network connectivity, maximizes the informativeness of genetics for target validation, defining the target prioritization landscape for 30 immune traits at the gene and pathway level. We demonstrate how our genetics-led drug target prioritization approach (the priority index) successfully identifies current therapeutics, predicts activity in high-throughput cellular screens (including L1000, CRISPR, mutagenesis and patient-derived cell assays), enables prioritization of under-explored targets and allows for determination of target-level trait relationships. The priority index is an open-access, scalable system accelerating early-stage drug target selection for immune-mediated disease.},
+	URL = {https://europepmc.org/articles/PMC7124888},
+}
+
+
+% -----------------------------------------------------------------------------
+% Genetic support and success
+% -----------------------------------------------------------------------------
+
+@article{Nelson2015-eg,
+  title     = "The support of human genetic evidence for approved drug
+               indications",
+  author    = "Nelson, Matthew R and Tipney, Hannah and Painter, Jeffery L and
+               Shen, Judong and Nicoletti, Paola and Shen, Yufeng and Floratos,
+               Aris and Sham, Pak Chung and Li, Mulin Jun and Wang, Junwen and
+               Cardon, Lon R and Whittaker, John C and Sanseau, Philippe",
+  journal   = "Nat. Genet.",
+  publisher = "Springer Science and Business Media LLC",
+  volume    =  47,
+  number    =  8,
+  pages     = "856--860",
+  month     =  aug,
+  year      =  2015,
+  language  = "en"
+}
+
+@ARTICLE{King2019-rc,
+  title    = "Are drug targets with genetic support twice as likely to be
+              approved? Revised estimates of the impact of genetic support for
+              drug mechanisms on the probability of drug approval",
+  author   = "King, Emily A and Davis, J Wade and Degner, Jacob F",
+  journal  = "PLoS Genet.",
+  volume   =  15,
+  number   =  12,
+  pages    = "e1008489",
+  month    =  dec,
+  year     =  2019,
+  language = "en"
+}
+
+@article {Minikel2023.06.23.23291765,
+	author = {Eric Vallabh Minikel and Jeffery L Painter and Coco Chengliang Dong and Matthew R. Nelson},
+	title = {Refining the impact of genetic evidence on clinical success},
+	elocation-id = {2023.06.23.23291765},
+	year = {2023},
+	doi = {10.1101/2023.06.23.23291765},
+	publisher = {Cold Spring Harbor Laboratory Press},
+	abstract = {The cost of drug discovery and development is driven primarily by failure, with just \~{}10\% of clinical programs eventually receiving approval. We previously estimated that human genetic evidence doubles the success rate from clinical development to approval. In this study we leverage the growth in genetic evidence over the past decade to better understand the characteristics that distinguish clinical success and failure. Relative success (RS) between drug mechanisms with genetic support and those without varies significantly among therapy areas and development phases and improves with increasing confidence in the causal gene. RS is largely unaffected by genetic effect size, minor allele frequency, or year of discovery. Our findings suggest that we are far from reaching peak genetic insights to aid the discovery of targets for more effective drug therapies.Competing Interest StatementMRN and CLD are employees of Deerfield. MRN is an employee of Genscience. EVM and JP are consultants to Deerfield. EVM also acknowledges research support, unrelated to the current work, from Ionis, Gate, and Charles River.Funding StatementThis study did not receive any fundingAuthor DeclarationsI confirm all relevant ethical guidelines have been followed, and any necessary IRB and/or ethics committee approvals have been obtained.YesI confirm that all necessary patient/participant consent has been obtained and the appropriate institutional forms have been archived, and that any patient/participant/sample identifiers included were not known to anyone (e.g., hospital staff, patients or participants themselves) outside the research group so cannot be used to identify individuals.YesI understand that all clinical trials and any other prospective interventional studies must be registered with an ICMJE-approved registry, such as ClinicalTrials.gov. I confirm that any such study reported in the manuscript has been registered and the trial registration ID is provided (note: if posting a prospective study registered retrospectively, please provide a statement in the trial ID field explaining why the study was not registered in advance).YesI have followed all appropriate research reporting guidelines, such as any relevant EQUATOR Network research reporting checklist(s) and other pertinent material, if applicable.YesAll source code and data produced in the present work are contained in the supplementary material an online at https://github.com/ericminikel/genetic_support/ https://github.com/ericminikel/genetic_support/},
+	URL = {https://www.medrxiv.org/content/early/2023/06/29/2023.06.23.23291765},
+	eprint = {https://www.medrxiv.org/content/early/2023/06/29/2023.06.23.23291765.full.pdf},
+	journal = {medRxiv}
+}
+
+@article {Razuvayevskaya2023.02.07.23285407,
+	author = {Olesya Razuvayevskaya and Irene Lopez and Ian Dunham and David Ochoa},
+	title = {Why Clinical Trials Stop: The Role of Genetics},
+	elocation-id = {2023.02.07.23285407},
+	year = {2023},
+	doi = {10.1101/2023.02.07.23285407},
+	publisher = {Cold Spring Harbor Laboratory Press},
+	abstract = {Many drug discovery projects are started, but few progress fully through clinical trials to approval. Previous work has shown that human genetics support for the therapeutic hypothesis increases the chance of trial progression. Here, we applied natural language processing to classify the freetext reasons for 28,842 clinical trials that stopped before their endpoints were met. We then evaluated these classes in the light of the underlying evidence for the therapeutic hypothesis and target properties. We show that trials are more likely to stop due to lack of efficacy in the absence of strong genetic evidence from human populations or genetically-modified animal models. Furthermore, trials are more likely to stop for safety reasons if the drug target gene is highly constrained in human populations and if the gene is not selectively expressed. These results support the growing use of human genetics to evaluate targets for drug discovery programmes.Competing Interest StatementThe authors have declared no competing interest.Funding StatementThis research was funded in part by a Wellcome Trust grant [Grant number 206194]. For the purpose of Open Access, the authors have applied a CC-BY public copyright licence to any author-accepted manuscript version arising from this submission.Author DeclarationsI confirm all relevant ethical guidelines have been followed, and any necessary IRB and/or ethics committee approvals have been obtained.YesI confirm that all necessary patient/participant consent has been obtained and the appropriate institutional forms have been archived, and that any patient/participant/sample identifiers included were not known to anyone (e.g., hospital staff, patients or participants themselves) outside the research group so cannot be used to identify individuals.YesI understand that all clinical trials and any other prospective interventional studies must be registered with an ICMJE-approved registry, such as ClinicalTrials.gov. I confirm that any such study reported in the manuscript has been registered and the trial registration ID is provided (note: if posting a prospective study registered retrospectively, please provide a statement in the trial ID field explaining why the study was not registered in advance).YesI have followed all appropriate research reporting guidelines and uploaded the relevant EQUATOR Network research reporting checklist(s) and other pertinent material as supplementary files, if applicable.YesAll data and methods in the present work are available online as described in the respective sections of the manuscript.BERTBidirectional Encoder Representations from TransformersClinGenThe Clinical GenomeClinVarClinically relevant VariantsCOSMICCatalogue of Somatic Mutations in CancergnomADThe Genome Aggregation DatabaseWASGenome-Wide Association StudiesIntOgenIntegrative Onco GenomicsLOEUFLoss-Of-Function Observed/Expected Upper Bound FractionLOFLoss-Of-FunctionNLPNatural Language Processing OR - Odds RatioPIPrincipal InvestigatorUniProtUniversal Protein resource},
+	URL = {https://www.medrxiv.org/content/early/2023/02/08/2023.02.07.23285407},
+	eprint = {https://www.medrxiv.org/content/early/2023/02/08/2023.02.07.23285407.full.pdf},
+	journal = {medRxiv}
+}
+
+@article {PMID:30652614,
+	Title = {Leveraging Human Genetics to Guide Cancer Drug Development},
+	Author = {Kinnersley, Ben and Sud, Amit and Coker, Elizabeth A and Tym, Joseph E and Di Micco, Patrizio and Al-Lazikani, Bissan and Houlston, Richard S},
+	DOI = {10.1200/cci.18.00077},
+	Volume = {2},
+	Month = {December},
+	Year = {2018},
+	Journal = {JCO clinical cancer informatics},
+	ISSN = {2473-4276},
+	Pages = {1—11},
+	Abstract = {&lt;h4&gt;Purpose&lt;/h4&gt;The high attrition rate of cancer drug development programs is a barrier to realizing the promise of precision oncology. We have examined whether the genetic insights from genome-wide association studies of cancer can guide drug development and repurposing in oncology.&lt;h4&gt;Materials and methods&lt;/h4&gt;Across 37 cancers, we identified 955 genetic risk variants from the National Human Genome Research Institute-European Bioinformatics Institute genome-wide association study catalog. We linked these variants to target genes using strategies that were based on linkage disequilibrium, DNA three-dimensional structure, and integration of predicted gene function and expression. With the use of the Informa Pharmaprojects database, we identified genes that are targets of unique drugs and assessed the level of enrichment that would be afforded by incorporation of genetic information in preclinical and phase II studies. For targets not under development, we implemented machine learning approaches to assess druggability.&lt;h4&gt;Results&lt;/h4&gt;For all preclinical targets incorporating genetic information, a 2.00-fold enrichment of a drug being successfully approved could be achieved (95% CI, 1.14- to 3.48-fold; P = .02). For phase II targets, a 2.75-fold enrichment could be achieved (95% CI, 1.42- to 5.35-fold; P &lt; .001). Application of genetic information suggests potential repurposing of 15 approved nononcology drugs.&lt;h4&gt;Conclusion&lt;/h4&gt;The findings illustrate the value of using insights from the genetics of inherited cancer susceptibility discovery projects as part of a data-driven strategy to inform drug discovery. Support for cancer germline genetic information for prospective targets is available online from the Institute of Cancer Research.},
+	URL = {https://europepmc.org/articles/PMC6874034},
+}
+
+@article {PMID:38172303,
+	Title = {Development of a human genetics-guided priority score for 19,365 genes and 399 drug indications},
+	Author = {Duffy, Áine and Petrazzini, Ben Omega and Stein, David and Park, Joshua K and Forrest, Iain S and Gibson, Kyle and Vy, Ha My and Chen, Robert and Márquez-Luna, Carla and Mort, Matthew and Verbanck, Marie and Schlessinger, Avner and Itan, Yuval and Cooper, David N and Rocheleau, Ghislain and Jordan, Daniel M and Do, Ron},
+	DOI = {10.1038/s41588-023-01609-2},
+	Number = {1},
+	Volume = {56},
+	Month = {January},
+	Year = {2024},
+	Journal = {Nature genetics},
+	ISSN = {1061-4036},
+	Pages = {51—59},
+	Abstract = {Studies have shown that drug targets with human genetic support are more likely to succeed in clinical trials. Hence, a tool integrating genetic evidence to prioritize drug target genes is beneficial for drug discovery. We built a genetic priority score (GPS) by integrating eight genetic features with drug indications from the Open Targets and SIDER databases. The top 0.83%, 0.28% and 0.19% of the GPS conferred a 5.3-, 9.9- and 11.0-fold increased effect of having an indication, respectively. In addition, we observed that targets in the top 0.28% of the score were 1.7-, 3.7- and 8.8-fold more likely to advance from phase I to phases II, III and IV, respectively. Complementary to the GPS, we incorporated the direction of genetic effect and drug mechanism into a directional version of the score called the GPS with direction of effect. We applied our method to 19,365 protein-coding genes and 399 drug indications and made all results available through a web portal.},
+	URL = {https://doi.org/10.1038/s41588-023-01609-2},
+}
+
+@article {PMID:24833294,
+	Title = {Lessons learned from the fate of AstraZeneca's drug pipeline: a five-dimensional framework},
+	Author = {Cook, David and Brown, Dearg and Alexander, Robert and March, Ruth and Morgan, Paul and Satterthwaite, Gemma and Pangalos, Menelas N},
+	DOI = {10.1038/nrd4309},
+	Number = {6},
+	Volume = {13},
+	Month = {June},
+	Year = {2014},
+	Journal = {Nature reviews. Drug discovery},
+	ISSN = {1474-1776},
+	Pages = {419—431},
+	Abstract = {Maintaining research and development (R&amp;D) productivity at a sustainable level is one of the main challenges currently facing the pharmaceutical industry. In this article, we discuss the results of a comprehensive longitudinal review of AstraZeneca's small-molecule drug projects from 2005 to 2010. The analysis allowed us to establish a framework based on the five most important technical determinants of project success and pipeline quality, which we describe as the five 'R's: the right target, the right patient, the right tissue, the right safety and the right commercial potential. A sixth factor - the right culture - is also crucial in encouraging effective decision-making based on these technical determinants. AstraZeneca is currently applying this framework to guide its R&amp;D teams, and although it is too early to demonstrate whether this has improved the company's R&amp;D productivity, we present our data and analysis here in the hope that it may assist the industry overall in addressing this key challenge.},
+	URL = {https://doi.org/10.1038/nrd4309},
+}
+
+@article {PMID:35804044,
+	Title = {Human genetics evidence supports two-thirds of the 2021 FDA-approved drugs},
+	Author = {Ochoa, David and Karim, Mohd and Ghoussaini, Maya and Hulcoop, David G and McDonagh, Ellen M and Dunham, Ian},
+	DOI = {10.1038/d41573-022-00120-3},
+	Number = {8},
+	Volume = {21},
+	Month = {August},
+	Year = {2022},
+	Journal = {Nature reviews. Drug discovery},
+	ISSN = {1474-1776},
+	Pages = {551},
+	URL = {https://doi.org/10.1038/d41573-022-00120-3},
+}
+
+@article {PMID:36963162,
+	Title = {Future prospects for human genetics and genomics in drug discovery},
+	Author = {Ghoussaini, Maya and Nelson, Matthew R and Dunham, Ian},
+	DOI = {10.1016/j.sbi.2023.102568},
+	Volume = {80},
+	Month = {June},
+	Year = {2023},
+	Journal = {Current opinion in structural biology},
+	ISSN = {0959-440X},
+	Pages = {102568},
+	Abstract = {Evidence from human genetics supporting the therapeutic hypothesis increases the likelihood that a drug will succeed in clinical trials. Rare and common disease genetics yield a wide array of alleles with a range of effect sizes that can proxy for the effect of a drug in disease. Recent advances in large scale population collections and whole genome sequencing approaches have provided a rich resource of human genetic evidence to support drug target selection. As the range of phenotypes profiled increases and ever more alleles are discovered across world-wide populations, these approaches will increasingly influence multiple stages across the lifespan of a drug discovery programme.},
+	URL = {https://europepmc.org/articles/PMC7614359},
+}
+
+
+% -----------------------------------------------------------------------------
+% Genetics + network expansion methods
+% -----------------------------------------------------------------------------
+
+@article{Bao2022-bq,
+  title     = "Genomic evidence supports the recognition of endometriosis as an
+               inflammatory systemic disease and reveals disease-specific
+               therapeutic potentials of targeting neutrophil degranulation",
+  author    = "Bao, Chaohui and Wang, Hengru and Fang, Hai",
+  journal   = "Front. Immunol.",
+  publisher = "Frontiers Media SA",
+  volume    =  13,
+  pages     = "758440",
+  month     =  mar,
+  year      =  2022,
+  keywords  = "drug repurposing; endometriosis; inflammatory systemic disease;
+               neutrophil degranulation; therapeutic target prioritization",
+  copyright = "https://creativecommons.org/licenses/by/4.0/",
+  language  = "en"
+}
+
+@article {PMID:36087372,
+	Title = {Network analysis of genome-wide association studies for drug target prioritisation},
+	Author = {Barrio-Hernandez, Inigo and Beltrao, Pedro},
+	DOI = {10.1016/j.cbpa.2022.102206},
+	Volume = {71},
+	Month = {December},
+	Year = {2022},
+	Journal = {Current opinion in chemical biology},
+	ISSN = {1367-5931},
+	Pages = {102206},
+	Abstract = {Over the past decades, genome-wide association studies (GWAS) have led to a dramatic expansion of genetic variants implicated with human traits and diseases. These advances are expected to result in new drug targets but the identification of causal genes and the cell biology underlying human diseases from GWAS remains challenging. Here, we review protein interaction network-based methods to analyse GWAS data. These approaches can rank candidate drug targets at GWAS-associated loci or among interactors of disease genes without direct genetic support. These methods identify the cell biology affected in common across diseases, offering opportunities for drug repurposing, as well as be combined with expression data to identify focal tissues and cell types. Going forward, we expect that these methods will further improve from advances in the characterisation of context specific interaction networks and the joint analysis of rare and common genetic signals.},
+	URL = {https://www.research-collection.ethz.ch/bitstream/20.500.11850/570917/3/1-s2.0-S1367593122000916-main.pdf},
+}
+
+@article {PMID:36823319,
+	Title = {Network expansion of genetic associations defines a pleiotropy map of human cell biology},
+	Author = {Barrio-Hernandez, Inigo and Schwartzentruber, Jeremy and Shrivastava, Anjali and Del-Toro, Noemi and Gonzalez, Asier and Zhang, Qian and Mountjoy, Edward and Suveges, Daniel and Ochoa, David and Ghoussaini, Maya and Bradley, Glyn and Hermjakob, Henning and Orchard, Sandra and Dunham, Ian and Anderson, Carl A and Porras, Pablo and Beltrao, Pedro},
+	DOI = {10.1038/s41588-023-01327-9},
+	Number = {3},
+	Volume = {55},
+	Month = {March},
+	Year = {2023},
+	Journal = {Nature genetics},
+	ISSN = {1061-4036},
+	Pages = {389—398},
+	Abstract = {Interacting proteins tend to have similar functions, influencing the same organismal traits. Interaction networks can be used to expand the list of candidate trait-associated genes from genome-wide association studies. Here, we performed network-based expansion of trait-associated genes for 1,002 human traits showing that this recovers known disease genes or drug targets. The similarity of network expansion scores identifies groups of traits likely to share an underlying genetic and biological process. We identified 73 pleiotropic gene modules linked to multiple traits, enriched in genes involved in processes such as protein ubiquitination and RNA processing. In contrast to gene deletion studies, pleiotropy as defined here captures specifically multicellular-related processes. We show examples of modules linked to human diseases enriched in genes with known pathogenic variants that can be used to map targets of approved drugs for repurposing. Finally, we illustrate the use of network expansion scores to study genes at inflammatory bowel disease genome-wide association study loci, and implicate inflammatory bowel disease-relevant genes with strong functional and genetic support.},
+	URL = {https://europepmc.org/articles/PMC10011132},
+}
+
+@article {PMID:33262371,
+	Title = {Network and pathway expansion of genetic disease associations identifies successful drug targets},
+	Author = {MacNamara, Aidan and Nakic, Nikolina and Amin Al Olama, Ali and Guo, Cong and Sieber, Karsten B and Hurle, Mark R and Gutteridge, Alex},
+	DOI = {10.1038/s41598-020-77847-9},
+	Number = {1},
+	Volume = {10},
+	Month = {December},
+	Year = {2020},
+	Journal = {Scientific reports},
+	ISSN = {2045-2322},
+	Pages = {20970},
+	Abstract = {Genetic evidence of disease association has often been used as a basis for selecting of drug targets for complex common diseases. Likewise, the propagation of genetic evidence through gene or protein interaction networks has been shown to accurately infer novel disease associations at genes for which no direct genetic evidence can be observed. However, an empirical test of the utility of combining these approaches for drug discovery has been lacking. In this study, we examine genetic associations arising from an analysis of 648 UK Biobank GWAS and evaluate whether targets identified as proxies of direct genetic hits are enriched for successful drug targets, as measured by historical clinical trial data. We find that protein networks formed from specific functional linkages such as protein complexes and ligand-receptor pairs are suitable for even naïve guilt-by-association network propagation approaches. In addition, more sophisticated approaches applied to global protein-protein interaction networks and pathway databases, also successfully retrieve targets enriched for clinically successful drug targets. We conclude that network propagation of genetic evidence can be used for drug target identification.},
+	URL = {https://europepmc.org/articles/PMC7708424},
+}
+
+% -----------------------------------------------------------------------------
+% Highly integrative prioritization algorithms
+% -----------------------------------------------------------------------------
+
+
+# Rosalind / Benevolent AI paper
+@article{Paliwal2020-hr,
+  title     = "Preclinical validation of therapeutic targets predicted by
+               tensor factorization on heterogeneous graphs",
+  author    = "Paliwal, Saee and de Giorgio, Alex and Neil, Daniel and Michel,
+               Jean-Baptiste and Lacoste, Alix Mb",
+  journal   = "Sci. Rep.",
+  publisher = "Springer Science and Business Media LLC",
+  volume    =  10,
+  number    =  1,
+  pages     = "18250",
+  month     =  oct,
+  year      =  2020,
+  copyright = "https://creativecommons.org/licenses/by/4.0",
+  language  = "en"
+}
+
+# OccamzRazor paper
+@misc{pittala2020relationweighted,
+      title={Relation-weighted Link Prediction for Disease Gene Identification}, 
+      author={Srivamshi Pittala and William Koehler and Jonathan Deans and Daniel Salinas and Martin Bringmann and Katharina Sophia Volz and Berk Kapicioglu},
+      year={2020},
+      eprint={2011.05138},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+
+@article {PMID:32750869,
+	Title = {GuiltyTargets: Prioritization of Novel Therapeutic Targets With Network Representation Learning},
+	Author = {Muslu, Ozlem and Hoyt, Charles Tapley and Lacerda, Mauricio and Hofmann-Apitius, Martin and Frohlich, Holger},
+	DOI = {10.1109/tcbb.2020.3003830},
+	Number = {1},
+	Volume = {19},
+	Year = {2022},
+	Journal = {IEEE/ACM transactions on computational biology and bioinformatics},
+	ISSN = {1545-5963},
+	Pages = {491—500},
+	Abstract = {The majority of clinical trials fail due to low efficacy of investigated drugs, often resulting from a poor choice of target protein. Existing computational approaches aim to support target selection either via genetic evidence or by putting potential targets into the context of a disease specific network reconstruction. The purpose of this work was to investigate whether network representation learning techniques could be used to allow for a machine learning based prioritization of putative targets. We propose a novel target prioritization approach, GuiltyTargets, which relies on attributed network representation learning of a genome-wide protein-protein interaction network annotated with disease-specific differential gene expression and uses positive-unlabeled (PU) machine learning for candidate ranking. We evaluated our approach on 12 datasets from six diseases of different type (cancer, metabolic, neurodegenerative) within a 10 times repeated 5-fold stratified cross-validation and achieved AUROC values between 0.92 - 0.97, significantly outperforming previous approaches that relied on manually engineered topological features. Moreover, we showed that GuiltyTargets allows for target repositioning across related disease areas. An application of GuiltyTargets to Alzheimer's disease resulted in a number of highly ranked candidates that are currently discussed as targets in the literature. Interestingly, one (COMT) is also the target of an approved drug (Tolcapone) for Parkinson's disease, highlighting the potential for target repositioning with our method. The GuiltyTargets Python package is available on PyPI and all code used for analysis can be found under the MIT License at https://github.com/GuiltyTargets. Attributed network representation learning techniques provide an interesting approach to effectively leverage the existing knowledge about the molecular mechanisms in different diseases. In this work, the combination with positive-unlabeled learning for target prioritization demonstrated a clear superiority compared to classical feature engineering approaches. Our work highlights the potential of attributed network representation learning for target prioritization. Given the overarching relevance of networks in computational biology we believe that attributed network representation learning techniques could have a broader impact in the future.},
+	URL = {https://ieeexplore.ieee.org/ielx7/8857/9702518/09121705.pdf},
+}
+
+% "The omics-based models leverage various data types, including gene expression, methylation, proteomics, and genetic information extracted from the meta-analysis."
+@article {PMID:38404138,
+	Title = {PandaOmics: An AI-Driven Platform for Therapeutic Target and Biomarker Discovery},
+	Author = {Kamya, Petrina and Ozerov, Ivan V and Pun, Frank W and Tretina, Kyle and Fokina, Tatyana and Chen, Shan and Naumov, Vladimir and Long, Xi and Lin, Sha and Korzinkin, Mikhail and Polykovskiy, Daniil and Aliper, Alex and Ren, Feng and Zhavoronkov, Alex},
+	DOI = {10.1021/acs.jcim.3c01619},
+	Month = {February},
+	Year = {2024},
+	Journal = {Journal of chemical information and modeling},
+	ISSN = {1549-9596},
+	Abstract = {PandaOmics is a cloud-based software platform that applies artificial intelligence and bioinformatics techniques to multimodal omics and biomedical text data for therapeutic target and biomarker discovery. PandaOmics generates novel and repurposed therapeutic target and biomarker hypotheses with the desired properties and is available through licensing or collaboration. Targets and biomarkers generated by the platform were previously validated in both &lt;i&gt;in vitro&lt;/i&gt; and &lt;i&gt;in vivo&lt;/i&gt; studies. PandaOmics is a core component of Insilico Medicine's Pharma.ai drug discovery suite, which also includes Chemistry42 for the &lt;i&gt;de novo&lt;/i&gt; generation of novel small molecules, and inClinico─a data-driven multimodal platform that forecasts a clinical trial's probability of successful transition from phase 2 to phase 3. In this paper, we demonstrate how the PandaOmics platform can efficiently identify novel molecular targets and biomarkers for various diseases.},
+	URL = {https://pubs.acs.org/doi/pdf/10.1021/acs.jcim.3c01619},
+}
+
+@article {PMID:33741907,
+	Title = {Identification of disease treatment mechanisms through the multiscale interactome},
+	Author = {Ruiz, Camilo and Zitnik, Marinka and Leskovec, Jure},
+	DOI = {10.1038/s41467-021-21770-8},
+	Number = {1},
+	Volume = {12},
+	Month = {March},
+	Year = {2021},
+	Journal = {Nature communications},
+	ISSN = {2041-1723},
+	Pages = {1796},
+	Abstract = {Most diseases disrupt multiple proteins, and drugs treat such diseases by restoring the functions of the disrupted proteins. How drugs restore these functions, however, is often unknown as a drug's therapeutic effects are not limited to the proteins that the drug directly targets. Here, we develop the multiscale interactome, a powerful approach to explain disease treatment. We integrate disease-perturbed proteins, drug targets, and biological functions into a multiscale interactome network. We then develop a random walk-based method that captures how drug effects propagate through a hierarchy of biological functions and physical protein-protein interactions. On three key pharmacological tasks, the multiscale interactome predicts drug-disease treatment, identifies proteins and biological functions related to treatment, and predicts genes that alter a treatment's efficacy and adverse reactions. Our results indicate that physical interactions between proteins alone cannot explain treatment since many drugs treat diseases by affecting the biological functions disrupted by the disease rather than directly targeting disease proteins or their regulators. We provide a general framework for explaining treatment, even when drugs seem unrelated to the diseases they are recommended for.},
+	URL = {https://europepmc.org/articles/PMC7979814},
+}
+
+
+
+% -----------------------------------------------------------------------------
+% Layering genetic support and tractability
+% -----------------------------------------------------------------------------
+
+@article{PMID:28356508,
+	Title = {The druggable genome and support for target identification and validation in drug development},
+	Author = {Finan, Chris and Gaulton, Anna and Kruger, Felix A and Lumbers, R Thomas and Shah, Tina and Engmann, Jorgen and Galver, Luana and Kelley, Ryan and Karlsson, Anneli and Santos, Rita and Overington, John P and Hingorani, Aroon D and Casas, Juan P},
+	DOI = {10.1126/scitranslmed.aag1166},
+	Number = {383},
+	Volume = {9},
+	Month = {March},
+	Year = {2017},
+	Journal = {Science translational medicine},
+	ISSN = {1946-6234},
+	Pages = {eaag1166},
+	Abstract = {Target identification (determining the correct drug targets for a disease) and target validation (demonstrating an effect of target perturbation on disease biomarkers and disease end points) are important steps in drug development. Clinically relevant associations of variants in genes encoding drug targets model the effect of modifying the same targets pharmacologically. To delineate drug development (including repurposing) opportunities arising from this paradigm, we connected complex disease- and biomarker-associated loci from genome-wide association studies to an updated set of genes encoding druggable human proteins, to agents with bioactivity against these targets, and, where there were licensed drugs, to clinical indications. We used this set of genes to inform the design of a new genotyping array, which will enable association studies of druggable genes for drug target selection and validation in human disease.},
+	URL = {https://europepmc.org/articles/PMC6321762},
+}
+
+@article {PMID:35401535,
+	Title = {Genomic Evidence Supports the Recognition of Endometriosis as an Inflammatory Systemic Disease and Reveals Disease-Specific Therapeutic Potentials of Targeting Neutrophil Degranulation},
+	Author = {Bao, Chaohui and Wang, Hengru and Fang, Hai},
+	DOI = {10.3389/fimmu.2022.758440},
+	Volume = {13},
+	Year = {2022},
+	Journal = {Frontiers in immunology},
+	ISSN = {1664-3224},
+	Pages = {758440},
+	Abstract = {&lt;h4&gt;Background&lt;/h4&gt;Endometriosis, classically viewed as a localized disease, is increasingly recognized as a systemic disease with multi-organ effects. This disease is highlighted by systemic inflammation in affected organs and by high comorbidity with immune-mediated diseases.&lt;h4&gt;Results&lt;/h4&gt;We provide genomic evidence to support the recognition of endometriosis as an inflammatory systemic disease. This was achieved through our genomics-led target prioritization, called '&lt;i&gt;END'&lt;/i&gt;, that leverages the value of multi-layered genomic datasets (including genome-wide associations in disease, regulatory genomics, and protein interactome). Our prioritization recovered existing proof-of-concept therapeutic targeting in endometriosis and outperformed competing prioritization approaches (Open Targets and Naïve prioritization). Target genes at the leading prioritization revealed molecular hallmarks (and possibly the cellular basis as well) that are consistent with systemic disease manifestations. Pathway crosstalk-based attack analysis identified the critical gene &lt;i&gt;AKT1&lt;/i&gt;. In the context of this gene, we further identified genes that are already targeted by licensed medications in other diseases, such as &lt;i&gt;ESR1&lt;/i&gt;. Such analysis was supported by current interests targeting the PI3K/AKT/mTOR pathway in endometriosis and by the fact that therapeutic agents targeting &lt;i&gt;ESR1&lt;/i&gt; are now under active clinical trials in disease. The construction of cross-disease prioritization map enabled the identification of shared and distinct targets between endometriosis and immune-mediated diseases. Shared target genes identified opportunities for repurposing existing immunomodulators, particularly ﻿disease-modifying anti-rheumatic drugs (such as &lt;i&gt;TNF&lt;/i&gt;, &lt;i&gt;IL6&lt;/i&gt; and &lt;i&gt;IL6R&lt;/i&gt; blockades, and &lt;i&gt;JAK&lt;/i&gt; inhibitors). Genes highly prioritized only in endometriosis revealed disease-specific therapeutic potentials of targeting neutrophil degranulation - the exocytosis that can facilitate metastasis-like spread to distant organs causing inflammatory-like microenvironments.&lt;h4&gt;Conclusion&lt;/h4&gt;Improved target prioritization, along with an atlas of &lt;i&gt;in silico&lt;/i&gt; predicted targets and repurposed drugs (available at https://23verse.github.io/end), provides genomic insights into endometriosis, reveals disease-specific therapeutic potentials, and expands the existing theories on the origin of disease.},
+	URL = {https://europepmc.org/articles/PMC8983833},
+}
+
+
+% -----------------------------------------------------------------------------
+% Transcriptomics
+% -----------------------------------------------------------------------------
+
+@article {PMID:34561431,
+	Title = {Differentially expressed genes reflect disease-induced rather than disease-causing changes in the transcriptome},
+	Author = {Porcu, Eleonora and Sadler, Marie C and Lepik, Kaido and Auwerx, Chiara and Wood, Andrew R and Weihs, Antoine and Sleiman, Maroun S Bou and Ribeiro, Diogo M and Bandinelli, Stefania and Tanaka, Toshiko and Nauck, Matthias and Völker, Uwe and Delaneau, Olivier and Metspalu, Andres and Teumer, Alexander and Frayling, Timothy and Santoni, Federico A and Reymond, Alexandre and Kutalik, Zoltán},
+	DOI = {10.1038/s41467-021-25805-y},
+	Number = {1},
+	Volume = {12},
+	Month = {September},
+	Year = {2021},
+	Journal = {Nature communications},
+	ISSN = {2041-1723},
+	Pages = {5647},
+	Abstract = {Comparing transcript levels between healthy and diseased individuals allows the identification of differentially expressed genes, which may be causes, consequences or mere correlates of the disease under scrutiny. We propose a method to decompose the observational correlation between gene expression and phenotypes driven by confounders, forward- and reverse causal effects. The bi-directional causal effects between gene expression and complex traits are obtained by Mendelian Randomization integrating summary-level data from GWAS and whole-blood eQTLs. Applying this approach to complex traits reveals that forward effects have negligible contribution. For example, BMI- and triglycerides-gene expression correlation coefficients robustly correlate with trait-to-expression causal effects (r&lt;sub&gt;BMI &lt;/sub&gt;= 0.11, P&lt;sub&gt;BMI &lt;/sub&gt;= 2.0 × 10&lt;sup&gt;-51&lt;/sup&gt; and r&lt;sub&gt;TG &lt;/sub&gt;= 0.13, P&lt;sub&gt;TG &lt;/sub&gt;= 1.1 × 10&lt;sup&gt;-68&lt;/sup&gt;), but not detectably with expression-to-trait effects. Our results demonstrate that studies comparing the transcriptome of diseased and healthy subjects are more prone to reveal disease-induced gene expression changes rather than disease causing ones.},
+	URL = {https://europepmc.org/articles/PMC8463674},
+}
+
+% -----------------------------------------------------------------------------
+% References on clinical trial outcome prediction
+% -----------------------------------------------------------------------------
+
+# Insilico paper
+@article {PMID:37483175,
+	Title = {Prediction of Clinical Trials Outcomes Based on Target Choice and Clinical Trial Design with Multi-Modal Artificial Intelligence},
+	Author = {Aliper, Alex and Kudrin, Roman and Polykovskiy, Daniil and Kamya, Petrina and Tutubalina, Elena and Chen, Shan and Ren, Feng and Zhavoronkov, Alex},
+	DOI = {10.1002/cpt.3008},
+	Number = {5},
+	Volume = {114},
+	Month = {November},
+	Year = {2023},
+	Journal = {Clinical pharmacology and therapeutics},
+	ISSN = {0009-9236},
+	Pages = {972—980},
+	Abstract = {Drug discovery and development is a notoriously risky process with high failure rates at every stage, including disease modeling, target discovery, hit discovery, lead optimization, preclinical development, human safety, and efficacy studies. Accurate prediction of clinical trial outcomes may help significantly improve the efficiency of this process by prioritizing therapeutic programs that are more likely to succeed in clinical trials and ultimately benefit patients. Here, we describe inClinico, a transformer-based artificial intelligence software platform designed to predict the outcome of phase II clinical trials. The platform combines an ensemble of clinical trial outcome prediction engines that leverage generative artificial intelligence and multimodal data, including omics, text, clinical trial design, and small molecule properties. inClinico was validated in retrospective, quasi-prospective, and prospective validation studies internally and with pharmaceutical companies and financial institutions. The platform achieved 0.88 receiver operating characteristic area under the curve in predicting the phase II to phase III transition on a quasi-prospective validation dataset. The first prospective predictions were made and placed on date-stamped preprint servers in 2016. To validate our model in a real-world setting, we published forecasted outcomes for several phase II clinical trials achieving 79% accuracy for the trials that have read out. We also present an investment application of inClinico using date stamped virtual trading portfolio demonstrating 35% 9-month return on investment.},
+	URL = {https://doi.org/10.1002/cpt.3008},
+}
+
+# Novartis challenge paper
+@article {PMID:34430930,
+	Title = {Predicting drug approvals: The Novartis data science and artificial intelligence challenge},
+	Author = {Siah, Kien Wei and Kelley, Nicholas W and Ballerstedt, Steffen and Holzhauer, Björn and Lyu, Tianmeng and Mettler, David and Sun, Sophie and Wandel, Simon and Zhong, Yang and Zhou, Bin and Pan, Shifeng and Zhou, Yingyao and Lo, Andrew W},
+	DOI = {10.1016/j.patter.2021.100312},
+	Number = {8},
+	Volume = {2},
+	Month = {August},
+	Year = {2021},
+	Journal = {Patterns (New York, N.Y.)},
+	ISSN = {2666-3899},
+	Pages = {100312},
+	Abstract = {We describe a novel collaboration between academia and industry, an in-house data science and artificial intelligence challenge held by Novartis to develop machine-learning models for predicting drug-development outcomes, building upon research at MIT using data from Informa as the starting point. With over 50 cross-functional teams from 25 Novartis offices around the world participating in the challenge, the domain expertise of these Novartis researchers was leveraged to create predictive models with greater sophistication. Ultimately, two winning teams developed models that outperformed the baseline MIT model-areas under the curve of 0.88 and 0.84 versus 0.78, respectively-through state-of-the-art machine-learning algorithms and the use of newly incorporated features and data. In addition to validating the variables shown to be associated with drug approval in the earlier MIT study, the challenge also provided new insights into the drivers of drug-development success and failure.},
+	URL = {https://europepmc.org/articles/PMC8369231},
+}
+
+# Project alpha paper
+@article{Lo2019Machine,
+	author = {Lo, Andrew W. and Siah, Kien Wei and Wong, Chi Heem},
+	journal = {Harvard Data Science Review},
+	number = {1},
+	year = {2019},
+	month = {jul 1},
+	note = {https://hdsr.mitpress.mit.edu/pub/ct67j043},
+	publisher = {},
+	title = {Machine {Learning} {With} {Statistical} {Imputation} for {Predicting} {Drug} {Approvals}},
+	volume = {1},
+}
+
+
+% -----------------------------------------------------------------------------
+% Clinical trial statistics
+% -----------------------------------------------------------------------------
+
+@article {PMID:29394327,
+	Title = {Estimation of clinical trial success rates and related parameters},
+	Author = {Wong, Chi Heem and Siah, Kien Wei and Lo, Andrew W},
+	DOI = {10.1093/biostatistics/kxx069},
+	Number = {2},
+	Volume = {20},
+	Month = {April},
+	Year = {2019},
+	Journal = {Biostatistics (Oxford, England)},
+	ISSN = {1465-4644},
+	Pages = {273—286},
+	Abstract = {Previous estimates of drug development success rates rely on relatively small samples from databases curated by the pharmaceutical industry and are subject to potential selection biases. Using a sample of 406 038 entries of clinical trial data for over 21 143 compounds from January 1, 2000 to October 31, 2015, we estimate aggregate clinical trial success rates and durations. We also compute disaggregated estimates across several trial features including disease type, clinical phase, industry or academic sponsor, biomarker presence, lead indication status, and time. In several cases, our results differ significantly in detail from widely cited statistics. For example, oncology has a 3.4% success rate in our sample vs. 5.1% in prior studies. However, after declining to 1.7% in 2012, this rate has improved to 2.5% and 8.3% in 2014 and 2015, respectively. In addition, trials that use biomarkers in patient-selection have higher overall success probabilities than trials without biomarkers.},
+	URL = {https://europepmc.org/articles/PMC6409418},
+}
+
+@misc{fdaStepClinical,
+	author = {FDA},
+	title = {Step 3: Clinical Research --- fda.gov},
+	howpublished = {\url{https://www.fda.gov/patients/drug-development-process/step-3-clinical-research}},
+	year = {2018},
+	month = {Apr},
+}
+
+% -----------------------------------------------------------------------------
+% Trends in genetic evidence
+% -----------------------------------------------------------------------------
+
+@article {PMID:31491408,
+	Title = {Mendelian Gene Discovery: Fast and Furious with No End in Sight},
+	Author = {Bamshad, Michael J and Nickerson, Deborah A and Chong, Jessica X},
+	DOI = {10.1016/j.ajhg.2019.07.011},
+	Number = {3},
+	Volume = {105},
+	Month = {September},
+	Year = {2019},
+	Journal = {American journal of human genetics},
+	ISSN = {0002-9297},
+	Pages = {448—455},
+	Abstract = {Gene discovery for Mendelian conditions (MCs) offers a direct path to understanding genome function. Approaches based on next-generation sequencing applied at scale have dramatically accelerated gene discovery and transformed genetic medicine. Finding the genetic basis of ∼6,000-13,000 MCs yet to be delineated will require both technical and computational innovation, but will rely to a larger extent on meaningful data sharing.},
+	URL = {https://europepmc.org/articles/PMC6731362},
+}
+
+@article {PMID:36634672,
+	Title = {15 years of GWAS discovery: Realizing the promise},
+	Author = {Abdellaoui, Abdel and Yengo, Loic and Verweij, Karin J H and Visscher, Peter M},
+	DOI = {10.1016/j.ajhg.2022.12.011},
+	Number = {2},
+	Volume = {110},
+	Month = {February},
+	Year = {2023},
+	Journal = {American journal of human genetics},
+	ISSN = {0002-9297},
+	Pages = {179—194},
+	Abstract = {It has been 15 years since the advent of the genome-wide association study (GWAS) era. Here, we review how this experimental design has realized its promise by facilitating an impressive range of discoveries with remarkable impact on multiple fields, including population genetics, complex trait genetics, epidemiology, social science, and medicine. We predict that the emergence of large-scale biobanks will continue to expand to more diverse populations and capture more of the allele frequency spectrum through whole-genome sequencing, which will further improve our ability to investigate the causes and consequences of human genetic variation for complex traits and diseases.},
+	URL = {https://europepmc.org/articles/PMC9943775},
+}
+
+@article {PMID:33214558,
+	Title = {15 years of genome-wide association studies and no signs of slowing down},
+	Author = {Loos, Ruth J F},
+	DOI = {10.1038/s41467-020-19653-5},
+	Number = {1},
+	Volume = {11},
+	Month = {November},
+	Year = {2020},
+	Journal = {Nature communications},
+	ISSN = {2041-1723},
+	Pages = {5900},
+	URL = {https://europepmc.org/articles/PMC7677394},
+}
+
+@article {PMID:37612393,
+	Title = {From target discovery to clinical drug development with human genetics},
+	Author = {Trajanoska, Katerina and Bhérer, Claude and Taliun, Daniel and Zhou, Sirui and Richards, J Brent and Mooser, Vincent},
+	DOI = {10.1038/s41586-023-06388-8},
+	Number = {7975},
+	Volume = {620},
+	Month = {August},
+	Year = {2023},
+	Journal = {Nature},
+	ISSN = {0028-0836},
+	Pages = {737—745},
+	Abstract = {The substantial investments in human genetics and genomics made over the past three decades were anticipated to result in many innovative therapies. Here we investigate the extent to which these expectations have been met, excluding cancer treatments. In our search, we identified 40 germline genetic observations that led directly to new targets and subsequently to novel approved therapies for 36 rare and 4 common conditions. The median time between genetic target discovery and drug approval was 25 years. Most of the genetically driven therapies for rare diseases compensate for disease-causing loss-of-function mutations. The therapies approved for common conditions are all inhibitors designed to pharmacologically mimic the natural, disease-protective effects of rare loss-of-function variants. Large biobank-based genetic studies have the power to identify and validate a large number of new drug targets. Genetics can also assist in the clinical development phase of drugs-for example, by selecting individuals who are most likely to respond to investigational therapies. This approach to drug development requires investments into large, diverse cohorts of deeply phenotyped individuals with appropriate consent for genetically assisted trials. A robust framework that facilitates responsible, sustainable benefit sharing will be required to capture the full potential of human genetics and genomics and bring effective and safe innovative therapies to patients quickly.},
+	URL = {https://doi.org/10.1038/s41586-023-06388-8},
+}
+
+
+
+% -----------------------------------------------------------------------------
+% Bias in R&D
+% -----------------------------------------------------------------------------
+
+
+@article {PMID:37117303,
+	Title = {Herding in the drug development pipeline},
+	Author = {Fougner, Christian and Cannon, Julie and The, Lydia and Smith, Jeffrey F and Leclerc, Olivier},
+	DOI = {10.1038/d41573-023-00063-3},
+	Number = {8},
+	Volume = {22},
+	Month = {August},
+	Year = {2023},
+	Journal = {Nature reviews. Drug discovery},
+	ISSN = {1474-1776},
+	Pages = {617—618},
+	URL = {https://doi.org/10.1038/d41573-023-00063-3},
+}
+
+@article {PMID:29358745,
+	Title = {Gene annotation bias impedes biomedical research},
+	Author = {Haynes, Winston A and Tomczak, Aurelie and Khatri, Purvesh},
+	DOI = {10.1038/s41598-018-19333-x},
+	Number = {1},
+	Volume = {8},
+	Month = {January},
+	Year = {2018},
+	Journal = {Scientific reports},
+	ISSN = {2045-2322},
+	Pages = {1362},
+	Abstract = {We found tremendous inequality across gene and protein annotation resources. We observed that this bias leads biomedical researchers to focus on richly annotated genes instead of those with the strongest molecular data. We advocate that researchers reduce these biases by pursuing data-driven hypotheses.},
+	URL = {https://europepmc.org/articles/PMC5778030},
+}
+
+@article {PMID:27910877,
+	Title = {A comprehensive map of molecular drug targets},
+	Author = {Santos, Rita and Ursu, Oleg and Gaulton, Anna and Bento, A Patrícia and Donadi, Ramesh S and Bologa, Cristian G and Karlsson, Anneli and Al-Lazikani, Bissan and Hersey, Anne and Oprea, Tudor I and Overington, John P},
+	DOI = {10.1038/nrd.2016.230},
+	Number = {1},
+	Volume = {16},
+	Month = {January},
+	Year = {2017},
+	Journal = {Nature reviews. Drug discovery},
+	ISSN = {1474-1776},
+	Pages = {19—34},
+	Abstract = {The success of mechanism-based drug discovery depends on the definition of the drug target. This definition becomes even more important as we try to link drug response to genetic variation, understand stratified clinical efficacy and safety, rationalize the differences between drugs in the same therapeutic class and predict drug utility in patient subgroups. However, drug targets are often poorly defined in the literature, both for launched drugs and for potential therapeutic agents in discovery and development. Here, we present an updated comprehensive map of molecular targets of approved drugs. We curate a total of 893 human and pathogen-derived biomolecules through which 1,578 US FDA-approved drugs act. These biomolecules include 667 human-genome-derived proteins targeted by drugs for human disease. Analysis of these drug targets indicates the continued dominance of privileged target families across disease areas, but also the growth of novel first-in-class mechanisms, particularly in oncology. We explore the relationships between bioactivity class and clinical success, as well as the presence of orthologues between human and animal models and between pathogen and human genomes. Through the collaboration of three independent teams, we highlight some of the ongoing challenges in accurately defining the targets of molecular therapeutics and present conventions for deconvoluting the complexities of molecular pharmacology and drug efficacy.},
+	URL = {https://europepmc.org/articles/PMC6314433},
+}
+
+@article {PMID:36736292,
+	Title = {Using genetic association data to guide drug discovery and development: Review of methods and applications},
+	Author = {Burgess, Stephen and Mason, Amy M and Grant, Andrew J and Slob, Eric A W and Gkatzionis, Apostolos and Zuber, Verena and Patel, Ashish and Tian, Haodong and Liu, Cunhao and Haynes, William G and Hovingh, G Kees and Knudsen, Lotte Bjerre and Whittaker, John C and Gill, Dipender},
+	DOI = {10.1016/j.ajhg.2022.12.017},
+	Number = {2},
+	Volume = {110},
+	Month = {February},
+	Year = {2023},
+	Journal = {American journal of human genetics},
+	ISSN = {0002-9297},
+	Pages = {195—214},
+	Abstract = {Evidence on the validity of drug targets from randomized trials is reliable but typically expensive and slow to obtain. In contrast, evidence from conventional observational epidemiological studies is less reliable because of the potential for bias from confounding and reverse causation. Mendelian randomization is a quasi-experimental approach analogous to a randomized trial that exploits naturally occurring randomization in the transmission of genetic variants. In Mendelian randomization, genetic variants that can be regarded as proxies for an intervention on the proposed drug target are leveraged as instrumental variables to investigate potential effects on biomarkers and disease outcomes in large-scale observational datasets. This approach can be implemented rapidly for a range of drug targets to provide evidence on their effects and thus inform on their priority for further investigation. In this review, we present statistical methods and their applications to showcase the diverse opportunities for applying Mendelian randomization in guiding clinical development efforts, thus enabling interventions to target the right mechanism in the right population group at the right time. These methods can inform investigators on the mechanisms underlying drug effects, their related biomarkers, implications for the timing of interventions, and the population subgroups that stand to gain the most benefit. Most methods can be implemented with publicly available data on summarized genetic associations with traits and diseases, meaning that the only major limitations to their usage are the availability of appropriately powered studies for the exposure and outcome and the existence of a suitable genetic proxy for the proposed intervention.},
+	URL = {https://europepmc.org/articles/PMC9943784},
+}
+
+
+@misc {PPR:PPR7029,
+	Title = {The druggable genome and support for target identification and validation in drug development},
+	Author = {Finan, Chris and Gaulton, Anna and Kruger, Felix and Lumbers, Tom and Shah, Tina and Engmann, Jorgen and Galver, Luana and Kelly, Ryan and Karlsson, Anneli and Santos, Rita and Overington, John and Hingorani, Aroon and Casas, Juan Pablo},
+	DOI = {10.1101/066027},
+	Abstract = {Target identification (identifying the correct drug targets for each disease) and target validation (demonstrating the effect of target perturbation on disease biomarkers and disease end-points) are essential steps in drug development. We showed previously that biomarker and disease endpoint associations of single nucleotide polymorphisms (SNPs) in a gene encoding a drug target accurately depict the effect of modifying the same target with a pharmacological agent; others have shown that genomic support for a target is associated with a higher rate of drug development success. To delineate drug development (including repurposing) opportunities arising from this paradigm, we connected complex disease- and biomarker-associated loci from genome wide association studies (GWAS) to an updated set of genes encoding druggable human proteins, to compounds with bioactivity against these targets and, where these were licensed drugs, to clinical indications. We used this set of genes to inform the design of a new genotyping array, to enable druggable genome-wide association studies for drug target selection and validation in human disease.},
+	Publisher = {bioRxiv},
+	Year = {2016},
+	URL = {https://europepmc.org/article/PPR/PPR7029},
+}
+
+@article {PMID:32893970,
+	Title = {A historical review of publication bias},
+	Author = {Marks-Anglin, Arielle and Chen, Yong},
+	DOI = {10.1002/jrsm.1452},
+	Number = {6},
+	Volume = {11},
+	Month = {November},
+	Year = {2020},
+	Journal = {Research synthesis methods},
+	ISSN = {1759-2879},
+	Pages = {725—742},
+	Abstract = {Publication bias is a well-known threat to the validity of meta-analyses and, more broadly, the reproducibility of scientific findings. When policies and recommendations are predicated on an incomplete evidence base, it undermines the goals of evidence-based decision-making. Great strides have been made in the last 50 years to understand and address this problem, including calls for mandatory trial registration and the development of statistical methods to detect and correct for publication bias. We offer an historical account of seminal contributions by the evidence synthesis community, with an emphasis on the parallel development of graph-based and selection model approaches. We also draw attention to current innovations and opportunities for future methodological work.},
+	URL = {https://osf.io/zmdpk/download},
+}
+
+
+% -----------------------------------------------------------------------------
+% Misc
+% -----------------------------------------------------------------------------
+
+@article {PMID:19725948,
+	Title = {Comparative study of gene set enrichment methods},
+	Author = {Abatangelo, Luca and Maglietta, Rosalia and Distaso, Angela and D'Addabbo, Annarita and Creanza, Teresa Maria and Mukherjee, Sayan and Ancona, Nicola},
+	DOI = {10.1186/1471-2105-10-275},
+	Volume = {10},
+	Month = {September},
+	Year = {2009},
+	Journal = {BMC bioinformatics},
+	ISSN = {1471-2105},
+	Pages = {275},
+	Abstract = {&lt;h4&gt;Background&lt;/h4&gt;The analysis of high-throughput gene expression data with respect to sets of genes rather than individual genes has many advantages. A variety of methods have been developed for assessing the enrichment of sets of genes with respect to differential expression. In this paper we provide a comparative study of four of these methods: Fisher's exact test, Gene Set Enrichment Analysis (GSEA), Random-Sets (RS), and Gene List Analysis with Prediction Accuracy (GLAPA). The first three methods use associative statistics, while the fourth uses predictive statistics. We first compare all four methods on simulated data sets to verify that Fisher's exact test is markedly worse than the other three approaches. We then validate the other three methods on seven real data sets with known genetic perturbations and then compare the methods on two cancer data sets where our a priori knowledge is limited.&lt;h4&gt;Results&lt;/h4&gt;The simulation study highlights that none of the three method outperforms all others consistently. GSEA and RS are able to detect weak signals of deregulation and they perform differently when genes in a gene set are both differentially up and down regulated. GLAPA is more conservative and large differences between the two phenotypes are required to allow the method to detect differential deregulation in gene sets. This is due to the fact that the enrichment statistic in GLAPA is prediction error which is a stronger criteria than classical two sample statistic as used in RS and GSEA. This was reflected in the analysis on real data sets as GSEA and RS were seen to be significant for particular gene sets while GLAPA was not, suggesting a small effect size. We find that the rank of gene set enrichment induced by GLAPA is more similar to RS than GSEA. More importantly, the rankings of the three methods share significant overlap.&lt;h4&gt;Conclusion&lt;/h4&gt;The three methods considered in our study recover relevant gene sets known to be deregulated in the experimental conditions and pathologies analyzed. There are differences between the three methods and GSEA seems to be more consistent in finding enriched gene sets, although no method uniformly dominates over all data sets. Our analysis highlights the deep difference existing between associative and predictive methods for detecting enrichment and the use of both to better interpret results of pathway analysis. We close with suggestions for users of gene set methods.},
+	URL = {https://europepmc.org/articles/PMC2746222},
+}
+
+@article {PMID:27723281,
+	Title = {Gene Expression and Pharmacodynamic Changes in 1,760 Systemic Lupus Erythematosus Patients From Two Phase III Trials of BAFF Blockade With Tabalumab},
+	Author = {Hoffman, Robert W and Merrill, Joan T and Alarcón-Riquelme, Marta M E and Petri, Michelle and Dow, Ernst R and Nantz, Eric and Nisenbaum, Laura K and Schroeder, Krista M and Komocsar, Wendy J and Perumal, Narayanan B and Linnik, Matthew D and Airey, David C and Liu, Yushi and Rocha, Guilherme V and Higgs, Richard E},
+	DOI = {10.1002/art.39950},
+	Number = {3},
+	Volume = {69},
+	Month = {March},
+	Year = {2017},
+	Journal = {Arthritis and rheumatology (Hoboken, N.J.)},
+	ISSN = {2326-5191},
+	Pages = {643—654},
+	URL = {https://europepmc.org/articles/PMC6585752},
+}
+
+@article {PMID:28622505,
+	Title = {An Expanded View of Complex Traits: From Polygenic to Omnigenic},
+	Author = {Boyle, Evan A and Li, Yang I and Pritchard, Jonathan K},
+	DOI = {10.1016/j.cell.2017.05.038},
+	Number = {7},
+	Volume = {169},
+	Month = {June},
+	Year = {2017},
+	Journal = {Cell},
+	ISSN = {0092-8674},
+	Pages = {1177—1186},
+	Abstract = {A central goal of genetics is to understand the links between genetic variation and disease. Intuitively, one might expect disease-causing variants to cluster into key pathways that drive disease etiology. But for complex traits, association signals tend to be spread across most of the genome-including near many genes without an obvious connection to disease. We propose that gene regulatory networks are sufficiently interconnected such that all genes expressed in disease-relevant cells are liable to affect the functions of core disease-related genes and that most heritability can be explained by effects on genes outside core pathways. We refer to this hypothesis as an "omnigenic" model.},
+	URL = {https://europepmc.org/articles/PMC5536862},
+}
+
+@article {PMID:34930919,
+	Title = {Finding genetically-supported drug targets for Parkinson's disease using Mendelian randomization of the druggable genome},
+	Author = {Storm, Catherine S and Kia, Demis A and Almramhi, Mona M and Bandres-Ciga, Sara and Finan, Chris and {International Parkinson’s Disease Genomics Consortium (IPDGC)} and Hingorani, Aroon D and Wood, Nicholas W},
+	DOI = {10.1038/s41467-021-26280-1},
+	Number = {1},
+	Volume = {12},
+	Month = {December},
+	Year = {2021},
+	Journal = {Nature communications},
+	ISSN = {2041-1723},
+	Pages = {7342},
+	Abstract = {Parkinson's disease is a neurodegenerative movement disorder that currently has no disease-modifying treatment, partly owing to inefficiencies in drug target identification and validation. We use Mendelian randomization to investigate over 3,000 genes that encode druggable proteins and predict their efficacy as drug targets for Parkinson's disease. We use expression and protein quantitative trait loci to mimic exposure to medications, and we examine the causal effect on Parkinson's disease risk (in two large cohorts), age at onset and progression. We propose 23 drug-targeting mechanisms for Parkinson's disease, including four possible drug repurposing opportunities and two drugs which may increase Parkinson's disease risk. Of these, we put forward six drug targets with the strongest Mendelian randomization evidence. There is remarkably little overlap between our drug targets to reduce Parkinson's disease risk versus progression, suggesting different molecular mechanisms. Drugs with genetic support are considerably more likely to succeed in clinical trials, and we provide compelling genetic evidence and an analysis pipeline to prioritise Parkinson's disease drug development.},
+	URL = {https://europepmc.org/articles/PMC8688480},
+}
+
+@article {PMID:37225853,
+	Title = {A publication-wide association study (PWAS), historical language models to prioritise novel therapeutic drug targets},
+	Author = {Narganes-Carlón, David and Crowther, Daniel J and Pearson, Ewan R},
+	DOI = {10.1038/s41598-023-35597-4},
+	Number = {1},
+	Volume = {13},
+	Month = {May},
+	Year = {2023},
+	Journal = {Scientific reports},
+	ISSN = {2045-2322},
+	Pages = {8366},
+	Abstract = {Most biomedical knowledge is published as text, making it challenging to analyse using traditional statistical methods. In contrast, machine-interpretable data primarily comes from structured property databases, which represent only a fraction of the knowledge present in the biomedical literature. Crucial insights and inferences can be drawn from these publications by the scientific community. We trained language models on literature from different time periods to evaluate their ranking of prospective gene-disease associations and protein-protein interactions. Using 28 distinct historical text corpora of abstracts published between 1995 and 2022, we trained independent Word2Vec models to prioritise associations that were likely to be reported in future years. This study demonstrates that biomedical knowledge can be encoded as word embeddings without the need for human labelling or supervision. Language models effectively capture drug discovery concepts such as clinical tractability, disease associations, and biochemical pathways. Additionally, these models can prioritise hypotheses years before their initial reporting. Our findings underscore the potential for extracting yet-to-be-discovered relationships through data-driven approaches, leading to generalised biomedical literature mining for potential therapeutic drug targets. The Publication-Wide Association Study (PWAS) enables the prioritisation of under-explored targets and provides a scalable system for accelerating early-stage target ranking, irrespective of the specific disease of interest.},
+	URL = {https://europepmc.org/articles/PMC10209167},
+}
+
+@inproceedings{LightGBM,
+ author = {Ke, Guolin and Meng, Qi and Finley, Thomas and Wang, Taifeng and Chen, Wei and Ma, Weidong and Ye, Qiwei and Liu, Tie-Yan},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {LightGBM: A Highly Efficient Gradient Boosting Decision Tree},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf},
+ volume = {30},
+ year = {2017}
+}
+
+
+@misc{OT23.12release, 
+	title={Open targets platform 23.12 has been released!},
+	howpublished={\url{https://blog.opentargets.org/open-targets-platform-23-12-release/#target-prioritisation}}, 
+	publisher={Open Targets}, 
+	year={2023}, 
+	month={Nov}
+} 
+
+@misc{OTweights,
+	title = {{T}arget - disease associations | {O}pen {T}argets {P}latform {D}ocumentation},
+	publisher={Open Targets}, 
+	howpublished = {\url{https://platform-docs.opentargets.org/associations#data-source-weights}},
+	year = {2023}
+}
+
+@misc{OTTractability, 
+	title={{O}pen {T}argets {T}ractability {P}ipeline (version 2)},
+	howpublished={\url{https://github.com/chembl/tractability_pipeline_v2}}, 
+	publisher={Open Targets}, 
+	year={2023}, 
+	month={Jul},
+	commit={5c6df4fd5978f0974cf070157df5d75e88fec0cc}
+} 

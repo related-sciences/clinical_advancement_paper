@@ -1,0 +1,54 @@
+name: paper
+
+channels:
+  - conda-forge
+
+dependencies:
+  - black=22.10.0
+  - bottleneck=1.3.5
+  - bs4=4.11.1
+  - coloredlogs=15.0.1
+  - conda-lock=2.5.1
+  - dill=0.3.6
+  - fire=0.4.0
+  - fsspec=2022.11.0
+  - gcsfs=2022.11.0
+  - glasbey=0.2.0
+  - google-api-python-client=2.70.0
+  - google-cloud-bigquery=2.34.4
+  - httplib2=0.21.0
+  - jupyterlab=3.5.1
+  - lightgbm=3.3.3
+  - matplotlib=3.6.2
+  - numpy=1.23.5
+  - openjdk=11.0.15
+  - pandas=1.5.2
+  - pandas-gbq=0.17.9
+  - papermill=2.3.4
+  - plotnine=0.12.2
+  - pyarrow=7.0.1
+  - pyspark=3.3.1
+  - python=3.10.8
+  - scikit-learn=1.2.0
+  - scipy=1.9.3
+  - seaborn=0.12.1
+  - shap=0.43.0
+  - sparse=0.13.0
+  - tabulate=0.9.0
+  - tqdm=4.64.1
+  - xarray=2022.3.0
+  - xlrd=2.0.1
+  - xmltodict=0.13.0
+  - zarr=2.10.3
+  - pip=22.3.1
+  - pip:
+    - grpcio==1.51.1
+    - hypothesis==6.59.0
+    - jupyter-black==0.3.3
+    - pre-commit==2.20.0
+    - protobuf==3.20.3
+    - pyspark-gcs==2.2.6.1
+    - pytest==7.2.0
+    - pytest-xdist==3.0.2
+variables:
+  CLOUDSDK_PYTHON_SITEPACKAGES: 1
