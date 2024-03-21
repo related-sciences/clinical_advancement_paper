@@ -2,6 +2,8 @@
 
 This repository contains the code necessary to create the paper first discussed in https://github.com/related-sciences/facets/issues/3611#issuecomment-1873479582.
 
+The most recently rendered version of the paper is at [paper.pdf](paper/paper.pdf).
+
 ### Execution
 
 Here are commands necessary to reproduce this analysis:
