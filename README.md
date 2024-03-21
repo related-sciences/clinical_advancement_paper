@@ -13,7 +13,7 @@ mamba env create --file environment.yml
 conda activate paper
 
 echo 'GOOGLE_CLOUD_PROJECT="<YOUR_PROJECT_NAME>"' > .env
-export DATA_DIR="/home/eczech/repos/facets/local/data/open_targets_ml"
+export DATA_DIR="<YOUR_DATA_DIR>"
 export CLI="analysis.py"
 export OT_VERSION="23.12"
 
