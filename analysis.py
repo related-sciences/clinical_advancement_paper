@@ -35,7 +35,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegressionCV, Ridge
 from sklearn.pipeline import FunctionTransformer, Pipeline, make_pipeline
 from sklearn.preprocessing import MinMaxScaler
-from . import xrml
+import xrml
 
 logger = logging.getLogger(__name__)
 
@@ -2507,8 +2507,8 @@ def prepare_classification_metrics_by_therapeutic_area(
                 df.assign(clipped=False)
             ) if ap_max_value is None else (
                 df
-                .assign(clipped=lambda df: np.where(df["metric"] == "average precision", df["value"] > .3, False))
-                .assign(value=lambda df: np.where(df["metric"] == "average precision", df["value"].clip(0, .3), df["value"]))
+                .assign(clipped=lambda df: np.where(df["metric"] == "average precision", df["value"] > ap_max_value, False))
+                .assign(value=lambda df: np.where(df["metric"] == "average precision", df["value"].clip(0, ap_max_value), df["value"]))
             )
         ))
     )
@@ -2565,9 +2565,10 @@ def prepare_relative_risk_by_therapeutic_area(
     # fmt: off
     return (
         relative_risk
-        .pipe(lambda df: df[df["is_primary_benchmark_feature"] | df["is_primary_model_feature"]])
-        # Fill limit before using in grouping and invert fill after
+        .pipe(lambda df: df[df["is_primary_benchmark_feature"] | df["is_model_feature"]])
+        # Fill limit before using in grouping and invert fill after (it is dropped otherwise as Int64)
         .assign(limit=lambda df: df["limit"].fillna(0))
+        # Compute summaries across therapeutic areas
         .pipe(lambda df: pd.concat([
             df,
             df
@@ -2576,6 +2577,7 @@ def prepare_relative_risk_by_therapeutic_area(
             .agg(**{
                 **{
                     "relative_risk": ("relative_risk", "mean"),
+                    "n_therapeutic_areas": ("therapeutic_area_name", "nunique")
                 },
                 **{
                     c: (c, "first")
@@ -2597,7 +2599,21 @@ def prepare_relative_risk_by_therapeutic_area(
             how='left'
         ))
         .assign(limit=lambda df: df["limit"].where(df["limit"] > 0).astype('Int64'))
-        .pipe(assert_condition, lambda df: (~df["is_primary_model_feature"] | df["p_value"].notnull()).all())
+        # Ensure that RRs and p-values are present for all primary models
+        .pipe(apply, lambda df: (
+            df[df["is_primary_model_feature"]]
+            .pipe(assert_condition, lambda df: 
+                df["relative_risk"].notnull().all() and
+                df["p_value"].notnull().all()
+            )
+        ))
+        # Also ensure that primary model mean RRs come from the same therapeutic areas
+        .pipe(apply, lambda df: (
+            df[df["is_primary_model_feature"] & (df["therapeutic_area_name"] == "average")]
+            .pipe(assert_condition, lambda df: 
+                (df["n_therapeutic_areas"] == len(set(primary_therapeutic_areas) - {"all"})).all()
+            )
+        ))
     )
     # fmt: on
 
@@ -2650,6 +2666,47 @@ def display_relative_risk_by_therapeutic_area(
                 .apply_index(lambda v: ["white-space: nowrap;"] * len(v), level="therapeutic_area", axis="index")
             )
         )
+    )
+    # fmt: on
+
+
+def combine_average_therapeutic_metrics(
+    relative_risk: PandasDataFrame,
+    classification_metrics: PandasDataFrame,
+    primary_therapeutic_areas: list[str],
+) -> PandasDataFrame:
+    therapeutic_areas = set(primary_therapeutic_areas) - {"all"}
+    # fmt: off
+    return (
+        pd.concat([
+            (
+                classification_metrics[["roc_auc", "average_precision"]]
+                .rename_axis("metric", axis="columns")
+                .stack().rename("value").reset_index()
+                .rename(columns={"models": "model_name"})
+                .pipe(assert_condition, lambda df: not df[["model_name", "therapeutic_area_name", "metric"]].duplicated().any())
+                .pipe(lambda df: df[df["therapeutic_area_name"].isin(therapeutic_areas)])
+                .groupby(["model_name", "metric"])
+                .agg(n_therapeutic_areas=("therapeutic_area_name", "nunique"), value=("value", "mean"))
+                .assign(limit=np.nan)
+                .reset_index()
+                [["model_name", "metric", "limit", "n_therapeutic_areas", "value"]]
+            ), (
+                relative_risk
+                .pipe(lambda df: df[df["is_model_feature"]])
+                .pipe(lambda df: df[df["therapeutic_area_name"] == "average"])
+                .assign(limit=lambda df: df["limit"].astype(int))
+                .assign(metric=lambda df: "rr@" + df["limit"].apply("{:03d}".format))
+                .assign(value=lambda df: df["relative_risk"])
+                .pipe(assert_condition, lambda df: not df[["model_name", "metric"]].duplicated().any())
+                [["model_name", "metric", "limit", "n_therapeutic_areas", "value"]]
+            )
+        ], axis=0, ignore_index=True)
+        .assign(n_therapeutic_areas=lambda df: df["n_therapeutic_areas"].astype(int))
+        .assign(has_all_primary_therapeutic_areas=lambda df: df["n_therapeutic_areas"] == len(therapeutic_areas))
+        .assign(model_algorithm=lambda df: df["model_name"].str.split("__").str[0].fillna(""))
+        .assign(model_features=lambda df: df["model_name"].str.split("__").str[1].fillna(""))
+        .assign(model_constraint=lambda df: df["model_name"].str.split("__").str[2].fillna(""))
     )
     # fmt: on
 
