@@ -117,16 +117,17 @@ A subset of therapeutic areas was used for this analysis and this is reflected i
 
 The relative risk estimates from the RDG model were also compared to univariate relative risk scores in Figure~\ref{fig:relative_risk_core_features}. This clearly implicates genetic features as being the most precise predictors, albeit with a relatively low frequency compared to others. Similar comparisons for target and disease specific features can be seen in Supplementary~Figure~\ref{fig:relative_risk_static_features}. These suggest that past clinical success for targets and diseases (independent of pairings) are likely to be highly predictive of advancement as well, while genetic constraint and expression specificity of targets also exhibit modest but significant effects.
 
+
 \begin{figure}[!htb]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
+  \includegraphics[width=1\textwidth]{performance_metric_mean_across_ta.pdf}
   \caption{
-    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
-    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} correspond to results for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
+    \textbf{Performance of ...}.
   }
-  \label{fig:relative_risk_core_features}
+  \label{fig:performance_metric_mean_across_ta}
 \end{figure}
+
 
 In order to establish baseline levels of success and coverage across TD pairs, we refer to several of the univariate features in Figure~\ref{fig:relative_risk_core_features} throughout this study. Specifically, the \colorbox{Gainsboro}{omim} and \colorbox{Gainsboro}{ot\_genetics\_portal} features correspond to OMIM and GWAS baselines in the parlance of \cite{King2019-rc}, \cite{Nelson2015-eg} and \cite{Minikel2023.06.23.23291765}. We also use the \colorbox{Gainsboro}{eva} feature as a baseline for ClinVar support, which has discriminative capabilities somewhere between these two. The extent to which the RDG model meets or exceeds these benchmarks in both relative risk for advancement and TD pair coverage is illustrated in Figure~\ref{fig:relative_risk_by_limit}.
 
@@ -329,6 +330,19 @@ We have demonstrated that simple machine learning methods applied to longitudina
   }
   \label{fig:relative_risk_dist_across_ta}
 \end{figure}
+
+
+\begin{figure}
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
+  \caption{
+    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
+    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} correspond to results for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
+  }
+  \label{fig:relative_risk_core_features}
+\end{figure}
+
 
 \begin{figure}
   \centering

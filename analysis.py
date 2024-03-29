@@ -2707,6 +2707,109 @@ def combine_average_therapeutic_metrics(
         .assign(model_algorithm=lambda df: df["model_name"].str.split("__").str[0].fillna(""))
         .assign(model_features=lambda df: df["model_name"].str.split("__").str[1].fillna(""))
         .assign(model_constraint=lambda df: df["model_name"].str.split("__").str[2].fillna(""))
+        .pipe(assert_condition, lambda df: not df[["model_name", "metric"]].duplicated().any())
+    )
+    # fmt: on
+
+
+def prepare_average_therapeutic_area_metrics(
+    average_therapeutic_metrics: PandasDataFrame,
+) -> PandasDataFrame:
+    metrics = [
+        "rr@010",
+        "rr@020",
+        "rr@030",
+        "rr@040",
+        "rr@050",
+        "rr@100",
+        "average_precision",
+        "roc_auc",
+    ]
+
+    feature_group = "feature ablations\n([+] models only)"
+    algorithms_group = "model algorithms\n(evidence only)"
+    df = average_therapeutic_metrics.pipe(
+        lambda df: df[df["has_all_primary_therapeutic_areas"]]
+    ).pipe(lambda df: df[df["metric"].isin(metrics)])
+    # fmt: off
+    return (
+        pd.concat(
+            [
+                (
+                    df
+                    .pipe(lambda df: df[df["model_algorithm"].isin(["rdg", "ots"])])
+                    .pipe(lambda df: df[df["model_features"].isin(["all", "no_time", "no_tgc"])])
+                    .pipe(lambda df: df[(df["model_algorithm"] == "ots") | (df["model_constraint"] == "positive")])
+                    .assign(
+                        model=lambda df: (
+                            df["model_algorithm"].str.upper() + 
+                            np.where(
+                                df["model_algorithm"] == "ots", "",
+                                df["model_features"].map({
+                                    "all": "-T",
+                                    "no_time": "",
+                                    "no_tgc": "-X",
+                                })
+                            )
+                        )
+                    )
+                    .assign(group=feature_group)
+                ),
+                (
+                    df
+                    .pipe(lambda df: df[df["model_algorithm"].isin(["gbm", "rdg", "ots"])])
+                    .pipe(lambda df: df[
+                        (df["model_features"] == "no_time") | 
+                        (df["model_algorithm"] == "ots")
+                    ])
+                    .assign(
+                        model=lambda df: (
+                            df["model_algorithm"].str.upper()
+                            + df["model_constraint"].map({
+                                "": "",
+                                "unconstrained": "[+/-]",
+                                "positive": "[+]",
+                            })
+                        )
+                    )
+                    .assign(group=algorithms_group)
+                ),
+            ],
+            axis=0,
+            ignore_index=True,
+        )
+        .assign(metric=lambda df: (
+            df["metric"]
+            .str.replace("rr@", "RR@")
+            .str.replace("average_precision", "AP")
+            .str.replace("roc_auc", "ROC")
+        ))
+        .pipe(assert_condition, lambda df: df["model"].notnull().all())
+        .pipe(assert_condition, lambda df: (df.groupby(["group", "model"])["model_name"].nunique() == 1).all())
+        .assign(norm_value=lambda df: (
+            df.groupby(["group", "metric"], group_keys=False)["value"]
+            .apply(lambda g: (g - g.min()) / (g.max() - g.min()))
+        ))
+        .assign(
+            model=lambda df: pd.Categorical(
+                df["model"],
+                ordered=True,
+                categories=(
+                    df.groupby(["group", "model"])["norm_value"].mean()
+                    .reset_index()
+                    .sort_values(["group", "norm_value"], ascending=True)
+                    ["model"].drop_duplicates().values
+                ),
+            )
+        )
+        .pipe(assert_condition, lambda df: df["model"].notnull().all())
+        .assign(group=lambda df: pd.Categorical(
+            df["group"], ordered=True, 
+            categories=[algorithms_group, feature_group]
+        ))
+        .pipe(assert_condition, lambda df: df["group"].notnull().all())
+        .assign(text=lambda df: df["value"].apply("{:.2f}".format))
+        .pipe(assert_condition, lambda df: df.drop(columns="limit").notnull().all().all())
     )
     # fmt: on
 
