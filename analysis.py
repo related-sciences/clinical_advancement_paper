@@ -14,7 +14,7 @@ import fire
 import numpy as np
 import pandas as pd
 import psutil
-import xarray as xr
+from xarray import Dataset
 from dotenv import load_dotenv
 from IPython.display import display
 from lightgbm import LGBMClassifier
@@ -989,7 +989,7 @@ def get_feature_statistics(
 
 
 def get_feature_relative_risk(
-    ds: xr.Dataset,
+    ds: Dataset,
     model_names: list[str] | None = None,
     model_limits: list[int] | None = None,
     confidence: float = 0.9,
@@ -1201,10 +1201,10 @@ def enrich_feature_relative_risk(
 
 
 def get_classification_metrics_by_therapeutic_area(
-    ds: xr.Dataset, therapeutic_areas: PandasDataFrame
+    ds: Dataset, therapeutic_areas: PandasDataFrame
 ) -> PandasDataFrame:
     def _metrics(
-        ds: xr.Dataset, therapeutic_area_id: str, therapeutic_area_name: str
+        ds: Dataset, therapeutic_area_id: str, therapeutic_area_name: str
     ) -> PandasDataFrame:
         disease_ids = (
             therapeutic_areas.pipe(
@@ -1243,7 +1243,7 @@ def get_classification_metrics_by_therapeutic_area(
 
 
 def get_relative_risk_thresholds(
-    relative_risk: PandasDataFrame, ds: xr.Dataset
+    relative_risk: PandasDataFrame, ds: Dataset
 ) -> PandasDataFrame:
     models = (
         relative_risk.pipe(lambda df: df[df["is_primary_model_feature"]])["model_name"]
@@ -1340,7 +1340,7 @@ def get_relative_risk_thresholds(
 
 
 def get_relative_risk_by_therapuetic_area(
-    ds: xr.Dataset,
+    ds: Dataset,
     therapeutic_areas: PandasDataFrame,
     model_names: list[str],
     model_limits: list[int] | None = None,
@@ -1536,7 +1536,7 @@ def get_modeling_features(
     return result
 
 
-def create_modeling_dataset(features: pd.DataFrame) -> xr.Dataset:
+def create_modeling_dataset(features: pd.DataFrame) -> Dataset:
     index = ["target_id", "disease_id"]
     descriptors = [c for c in features if "__" not in c and c not in index]
     assert len([c for c in features if "__outcome__" in c]) == 1
@@ -1637,7 +1637,66 @@ def get_ridge_regression_pipeline(
     ]
 
 
-def get_ridge_regression_explanations(ds: xr.Dataset, model: str) -> PandasDataFrame:
+def get_ridge_regression_weights(ds: Dataset, model: str) -> PandasDataFrame:
+    def _evidence_type(feature: str) -> str:
+        if "__genetic_association__" in feature or "__somatic_mutation__" in feature:
+            return "3. human genetic"
+        if "__literature__" in feature:
+            return "4. literature"
+        if "__clinical__" in feature:
+            return "1. human clinical"
+        if "__animal_model__" in feature:
+            return "2. animal model"
+        if feature.startswith("target__"):
+            return "5. target properties"
+        return "6. other"
+
+    # fmt: off
+    return (
+        pd.concat(
+            [
+                (
+                    get_ridge_regression_explanations(ds, model=model)
+                    .pipe(lambda df: df.where(df > 0))
+                    .drop(columns=["prediction", "outcome"])
+                    .agg(["min", "max", "mean", "median"])
+                    .T
+                ), (
+                    ds.model.sel(models=model)
+                    .item(0).estimator[-1]
+                    .coef_.rename("coefficient")
+                ),
+            ],
+            axis=1,
+        )
+        .pipe(lambda df: df[df["mean"] > 0])
+        .rename_axis("feature", axis="index")
+        .pipe(apply, lambda df: display(
+            df.sort_values("mean")
+            .style.background_gradient(cmap="Blues")
+        ))
+        .filter(items=["mean", "coefficient"])
+        .reset_index()
+        .assign(feature=lambda df: pd.Categorical(
+            df["feature"], ordered=True,
+            categories=df.sort_values("mean")["feature"].values,
+        ))
+        .set_index("feature")
+        .rename(columns={"mean": "effect mean", "coefficient": "effect max (i.e. coefficient)"})
+        .rename_axis("stat", axis="columns")
+        .stack()
+        .rename("value")
+        .reset_index()
+        .assign(stat=lambda df: pd.Categorical(
+            df["stat"], ordered=True,
+            categories=df["stat"].drop_duplicates().sort_values(ascending=False).values,
+        ))
+        .assign(evidence_type=lambda df: df["feature"].apply(_evidence_type))
+    )
+    # fmt: on
+
+
+def get_ridge_regression_explanations(ds: Dataset, model: str) -> PandasDataFrame:
     pipe = ds.model.sel(models=model).item(0).estimator
     features = pipe[:-1].transform(ds.feature.to_series().unstack())
     predictions = (
@@ -1811,7 +1870,7 @@ def get_models(feature_names: list[str]) -> list[xrml.Model]:
     return models
 
 
-def get_training_dataset(features: PandasDataFrame) -> xr.Dataset:
+def get_training_dataset(features: PandasDataFrame) -> Dataset:
     assert len(features) > 0
     ds = features.pipe(create_modeling_dataset)
     assert ds.dims["outcomes"] == 1
@@ -1825,8 +1884,8 @@ def get_training_dataset(features: PandasDataFrame) -> xr.Dataset:
 
 def get_evaluation_dataset(
     features: PandasDataFrame,
-    training_dataset: xr.Dataset,
-) -> xr.Dataset:
+    training_dataset: Dataset,
+) -> Dataset:
     return (
         features.pipe(create_modeling_dataset)
         .merge(training_dataset[["model"]])
@@ -1842,9 +1901,9 @@ def get_evaluation_dataset(
 def get_opportunity_dataset(
     features: SparkDataFrame,
     models: list[str],
-    training_dataset: xr.Dataset,
+    training_dataset: Dataset,
     time_since_transition: int = 5,
-) -> xr.Dataset:
+) -> Dataset:
     return (
         features.withColumnRenamed("year", "feature_year")  # type: ignore[attr-defined]
         .withColumn(OUTCOME_COLUMN, F.lit(True))
@@ -1858,7 +1917,7 @@ def get_opportunity_dataset(
 
 def get_opportunity_dataframe(
     spark: SparkSession,
-    training_dataset: xr.Dataset,
+    training_dataset: Dataset,
     model: str,
     input_dir: Path,
     output_dir: Path | None,
@@ -2396,7 +2455,10 @@ def prepare_relative_risk_by_feature(  # noqa: C901
             .pipe(lambda df: df[df["method"].str.contains("^target_disease__")])
             .assign(method_group=lambda df: df.apply(_method_group, axis=1))
             .pipe(lambda df: df[~df["method"].str.contains("^target_disease__clinical__")])
-            .assign(method=lambda df: df["method"].str.replace("target_disease__", ""))
+            .assign(method=lambda df: (
+                df["method"].str.replace("target_disease__", "")
+                .str.replace("__limit_", "@")
+            ))
             .assign(method=lambda df: df["method"].where(
                 ~df["is_model_feature"],
                 df["model_name"] + "@" + df["limit"].apply("{:03d}".format)
@@ -2726,8 +2788,8 @@ def prepare_average_therapeutic_area_metrics(
         "roc_auc",
     ]
 
-    feature_group = "feature ablations\n([+] models only)"
-    algorithms_group = "model algorithms\n(evidence only)"
+    feature_group = "feature ablations\n([+] models)"
+    algorithms_group = "model algorithms\n(core features)"
     df = average_therapeutic_metrics.pipe(
         lambda df: df[df["has_all_primary_therapeutic_areas"]]
     ).pipe(lambda df: df[df["metric"].isin(metrics)])
@@ -2805,7 +2867,7 @@ def prepare_average_therapeutic_area_metrics(
         .pipe(assert_condition, lambda df: df["model"].notnull().all())
         .assign(group=lambda df: pd.Categorical(
             df["group"], ordered=True, 
-            categories=[algorithms_group, feature_group]
+            categories=[feature_group, algorithms_group]
         ))
         .pipe(assert_condition, lambda df: df["group"].notnull().all())
         .assign(text=lambda df: df["value"].apply("{:.2f}".format))

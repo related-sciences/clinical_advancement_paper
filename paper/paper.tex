@@ -90,15 +90,15 @@ In order to compare these models to an Open Targets composite score, we use an e
 \subsection{Performance}
 \label{sec:results_performance}
 
-Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study -- a constrained, linear L2-regularized model referred to from here on as "RDG" -- ranks TD pairs by comparison to a composite score from Open Targets ("OTS"). The relative risk (RR) metric used in this comparison as well as all others where not specified otherwise is defined as:
+Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study -- a constrained, linear L2-regularized model referred to from here on as "RDG" (short for ridge regression) -- ranks TD pairs by comparison to a composite score from Open Targets ("OTS"). The relative risk (RR) metric used in this comparison as well as all others where not specified otherwise is defined as:
 
 \begin{equation}
   \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
 \end{equation}
 
-The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it also uses time since the phase 2 transition as a predictive factor as well as all others. We observe that the use of this information almost universally improves standard performance metrics like ROC (receiver operating characteristic) and AP (average precision), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. This is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion}). As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They are, however, a useful performance ceiling towards which future work might build towards.
+The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it also uses time since the phase 2 transition as a predictive factor as well as all others. We observe that the use of this information almost universally improves standard performance metrics like ROC (receiver operating characteristic) and AP (average precision), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. This is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion}). As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They are, however, a useful performance ceiling towards which future work could build.
 
-A subset of therapeutic areas was used for this analysis and this is reflected in both the mean estimates and distributions of Figure~\ref{fig:performance_across_ta}. A full list of these can be seen in Supplementary~Figure~\ref{fig:relative_risk_by_ta}, which also shows the RR estimates used in any summary statistics across therapeutic areas. These were selected based on criteria described in Section~\ref{sec:methods}. Lastly, Supplementary~Figure~\ref{fig:relative_risk_dist_across_ta} shows RR distributions by model with significances of their differences.
+A subset of therapeutic areas was used for this analysis and this is reflected in both the mean estimates and distributions of Figure~\ref{fig:performance_across_ta}. A full list of these can be seen in Supplementary~Figure~\ref{fig:relative_risk_by_ta}, which also shows the RR estimates used in any summary statistics across therapeutic areas. These were selected based on criteria described in Section~\ref{sec:methods}. Lastly, Supplementary~Figure~\ref{fig:relative_risk_dist_across_ta} shows RR distributions by model with the significance of their differences.
 
 \begin{figure}[!htb]
   \centering
@@ -117,15 +117,15 @@ A subset of therapeutic areas was used for this analysis and this is reflected i
 
 The relative risk estimates from the RDG model were also compared to univariate relative risk scores in Figure~\ref{fig:relative_risk_core_features}. This clearly implicates genetic features as being the most precise predictors, albeit with a relatively low frequency compared to others. Similar comparisons for target and disease specific features can be seen in Supplementary~Figure~\ref{fig:relative_risk_static_features}. These suggest that past clinical success for targets and diseases (independent of pairings) are likely to be highly predictive of advancement as well, while genetic constraint and expression specificity of targets also exhibit modest but significant effects.
 
-
 \begin{figure}[!htb]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{performance_metric_mean_across_ta.pdf}
+  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
   \caption{
-    \textbf{Performance of ...}.
+    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
+    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} correspond to results for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
   }
-  \label{fig:performance_metric_mean_across_ta}
+  \label{fig:relative_risk_core_features}
 \end{figure}
 
 
@@ -142,6 +142,23 @@ In order to establish baseline levels of success and coverage across TD pairs, w
 \end{figure}
 
 One objective of this study is to determine if any model, e.g. RDG, could sort TD pairs with genetic support such that at least some portion of that sorted list had a likelihood of advancement that consistently exceeds what is expected from any one source of genetic support alone. As a hypothetical example, we wanted to determine if the top 50 TD pairs out of 200 with GWAS support were more likely to advance than all 200 overall. We find that this goal is met and exceeded by the RDG model, which actually identifies more TD pairs than those that have either EVA or GWAS support alone at an expected rate of advancement exceeding that of the single source (respectively). This does not appear to be the case with the OMIM baseline, however the lack of examples in our evaluation dataset with OMIM support makes any determination difficult. See Section~\ref{sec:results_opportunities} for more on how these benchmarks are employed to contextualize opportunities among undeveloped TD pairs.
+
+\subsection{Models}
+
+The primary model for this analysis, RDG, is a constrained, L2-regularized linear regressor. Alternatives to this choice we explore include constrained and unconstrained gradient-boosted machine (GBM) models fit with the LightGBM \cite{LightGBM} algorithm as well as unconstrained L2-regularized linear regressors (i.e. RDG with no constraints). The performance of these alternatives, as quantified by relative risk estimates among top predictions, is illustrated in Figure~\ref{fig:performance_metric_mean_across_ta}. 
+
+\begin{figure}[!htb]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{performance_metric_mean_across_ta.pdf}
+  \caption{
+    \textbf{Performance of ...}.
+  }
+  \label{fig:performance_metric_mean_across_ta}
+\end{figure}
+
+
+We conclude from these results that 1) linear models outperform, or are at least not worse, than tree models when time is not used as a predictor and 2) non-negativity constraints in linear models result in greater performance. This is consistent with our expectation that all Open Targets scores should have monotonically increasing effects on the likelihood of success, since they were designed with this intent.
 
 \subsection{Sensitivity}
 
@@ -179,28 +196,12 @@ A common method for identifying druggable opportunities within a specific diseas
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{opportunity_summary.png}
   \caption{
-    \textbf{Present-day target-disease pair counts by tractability, likelihood of advancement and therapeutic area}. The \textbf{stage} panel contains counts by maximum trial phase reached, the \textbf{threshold} panel contains counts of pairs with a RDG model score exceeding that of the associated benchmark for only undeveloped pairs, and the \textbf{tractability} panel shows pair frequencies among undeveloped pairs exceeding the EVA threshold that also have a HIGH tractability rating as defined in Supplementary~Table~\ref{tab:tractability_buckets}. This corresponds to targets that have all been in clinical development already, except for the \textbf{OC} modality in which case it indicates that a target has been approved. 
+    \textbf{Present-day target-disease pair counts by stage, likelihood of advancement and tractability}. The \textbf{stage} panel contains counts by maximum trial phase reached, the \textbf{threshold} panel contains counts of pairs with a RDG model score exceeding that of the associated benchmark for only undeveloped pairs, and the \textbf{tractability} panel shows pair frequencies among undeveloped pairs exceeding the EVA threshold that also have a HIGH tractability rating as defined in Supplementary~Table~\ref{tab:tractability_buckets}. This corresponds to targets that have all been in clinical development already, except for the \textbf{OC} modality in which case it indicates that a target has been approved. 
   }
   \label{fig:opportunity_summary}
 \end{figure}
 
 Figure~\ref{fig:opportunity_summary} shows the distribution of TD pair counts for select buckets across therapeutic areas as well as across the current maximum phase reached for any one pair. We find that there are $\sim$2,400 small-molecule-enabled, $\sim$1,400 antibody-enabled, and 14 PROTAC-enabled TD pairs with a probability of advancement that is nearly 3x other TD pairs based on the EVA threshold RR=2.93 in Figure~\ref{fig:relative_risk_by_limit}. Top antibody-enabled pairs are shown in Supplementary~Figure~\ref{fig:top_opportunity_predictions} along with their corresponding genetic and clinical support.
-
-\subsection{Algorithms}
-
-The primary model for this analysis, RDG, is a constrained, L2-regularized linear regressor. Alternatives to this choice we explore include constrained and unconstrained gradient-boosted machine (GBM) models fit with the LightGBM \cite{LightGBM} algorithm as well as unconstrained L2-regularized linear regressors (i.e. RDG with no constraints). The performance of these alternatives, as quantified by relative risk estimates among top predictions, is illustrated in Figure~\ref{fig:relative_risk_model_features}. 
-
-\begin{figure}[!htb]
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_model_features.pdf}
-  \caption{
-    \textbf{Performance by algorithm, constraint type and feature grouping}.  
-  }
-  \label{fig:relative_risk_model_features}
-\end{figure}
-
-We conclude from these results that 1) linear models outperform, or are at least not worse, than tree models when time is not used as a predictor and 2) non-negativity constraints in linear models result in greater performance. This is consistent with our expectation that all Open Targets scores should have monotonically increasing effects on the likelihood of success, since they were designed with this intent.
 
 \subsection{Inflation}
 \label{sec:results_inflation}
@@ -331,19 +332,6 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \label{fig:relative_risk_dist_across_ta}
 \end{figure}
 
-
-\begin{figure}
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
-  \caption{
-    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
-    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} correspond to results for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
-  }
-  \label{fig:relative_risk_core_features}
-\end{figure}
-
-
 \begin{figure}
   \centering
   \captionsetup{width=.9\linewidth}
@@ -355,6 +343,16 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \label{fig:relative_risk_static_features}
 \end{figure}
 
+
+\begin{figure}
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{relative_risk_model_features.pdf}
+  \caption{
+    \textbf{Performance by algorithm, constraint type and feature grouping}.  
+  }
+  \label{fig:relative_risk_model_features}
+\end{figure}
 
 \begin{figure}
   \centering
