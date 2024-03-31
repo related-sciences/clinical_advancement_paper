@@ -8,16 +8,16 @@
 \usepackage{hyperref}       % hyperlinks
 \usepackage{url}            % simple URL typesetting
 \usepackage{booktabs}       % professional-quality tables
-\usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
-\usepackage{lipsum}
 \usepackage{fancyhdr}       % header
 \usepackage{graphicx}       % graphics
 \usepackage[table, x11names, svgnames]{xcolor}
 \usepackage{subfig}
+\usepackage{caption}
 \usepackage[section]{placeins}
 \usepackage{setspace}
+\usepackage{overpic}
 
 \setstretch{1.2} % line spacing
 
@@ -102,10 +102,18 @@ A subset of therapeutic areas was used for this analysis and this is reflected i
 
 \begin{figure}[!htb]
   \centering
-  \captionsetup{width=.9\linewidth}
-  \subfloat[\centering]{\includegraphics[width=.58\textwidth]{relative_risk_mean_across_ta.pdf}}
+  \captionsetup[subfigure]{labelformat=empty,width=.9\linewidth}
+  \subfloat[\centering]{
+    \begin{overpic}[width=.57\textwidth]{relative_risk_mean_across_ta.pdf}
+      \put(50, -3) {(a)}
+    \end{overpic}
+  }
   \qquad
-  \subfloat[\centering]{\includegraphics[width=.36\textwidth]{classifier_metrics_dist_across_ta.pdf}}
+  \subfloat[\centering]{
+    \begin{overpic}[width=.36\textwidth]{classifier_metrics_dist_across_ta.pdf}
+      \put(27, -3) {(b)}
+    \end{overpic}
+  }
   \caption{
     \textbf{Statistical learning optimizes expected target-disease pair advancement rates using longitudinal evidence}.
     (a) Equally-weighted average relative risk estimates across 13 therapeutic areas, by number of top rankings and 3 methods: RDG (ours), RDG-T (ours) and Open Targets composite scores. 
@@ -150,7 +158,10 @@ The primary model for this analysis, RDG, is a constrained, L2-regularized linea
 \begin{figure}[!htb]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{performance_metric_mean_across_ta.pdf}
+  \begin{overpic}[width=1\textwidth]{performance_metric_mean_across_ta.pdf}
+    \put(84.7, 38.2) {(a)}
+    \put(84.7, 22.5) {(b)}
+  \end{overpic}
   \caption{
     \textbf{Performance of ...}.
   }
