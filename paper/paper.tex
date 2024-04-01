@@ -14,6 +14,7 @@
 \usepackage{graphicx}       % graphics
 \usepackage[table, x11names, svgnames]{xcolor}
 \usepackage{subfig}
+\usepackage{float}
 \usepackage{caption}
 \usepackage[section]{placeins}
 \usepackage{setspace}
@@ -75,34 +76,49 @@ The prior works discussed so far can largely be categorized as either 1) target 
 \section{Results}
 \label{sec:results}
 
-In order to model clinical advancement for target-disease (TD) pairs, we first define "advancement" as progression beyond any particular trial phase across all drugs associated with any one TD pair as indicated by the presence of a later-stage trial. All results to follow consider only advancement beyond phase 2 due to limitations described in Section~\ref{sec:discussion}. This binary outcome is then predicted based on a list of features shown in Supplementary~Table~\ref{tab:features}. Information for each of these features is only used when it was published before the year \textbf{prior} to the first phase 2 trial observed, with an exception for genetic evidence discussed in Section~\ref{sec:results_inflation}. A training dataset is then formed by including only TD pairs where this first phase 2 year is between 1990 and 2015. The evaluation dataset then consists of all TD pairs entering phase 2 between 2016 and 2022, with a 2 year offset from the present year (2024) to allow enough time for some trials to complete. While the average phase 2 trial duration may be as low as 2 years \cite{fdaStepClinical}, other estimates would suggest half of them take longer than 2.9 years \cite{PMID:29394327}. This means a substantial fraction of outcomes are censored, that this is an important parameter to test sensitivity to and that time itself is likely to be a crucial covariate in this formulation. The distribution of these outcomes, the number of associated targets/diseases and a variety of other statistics on this dataset are presented in Supplementary~Figure~\ref{fig:dataset_statistics}.
+In order to model clinical advancement for target-disease (TD) pairs, we first define "advancement" as progression beyond any particular trial phase across all drugs associated with any one TD pair as indicated by the presence of a later-stage trial. All results to follow consider only advancement beyond phase 2 due to limitations described in Section~\ref{sec:discussion}. This binary outcome is then predicted based on a list of features shown in Table~\ref{tab:features}. Information for each of these features is only used when it was published before the year \textbf{prior} to the first phase 2 trial observed, with an exception for genetic evidence discussed in Section~\ref{sec:results_inflation}. A training dataset is then formed by including only TD pairs where this first phase 2 year is between 1990 and 2015. The evaluation dataset then consists of all TD pairs entering phase 2 between 2016 and 2022, with a 2 year offset from the present year (2024) to allow enough time for some trials to complete. While the average phase 2 trial duration may be as low as 2 years \cite{fdaStepClinical}, other estimates would suggest half of them take longer than 2.9 years \cite{PMID:29394327}. This means a substantial fraction of outcomes are censored, that this is an important parameter to test sensitivity to and that time itself is likely to be a crucial covariate in this formulation. The distribution of these outcomes, the number of associated targets/diseases and a variety of other statistics on this dataset are presented in Supplementary~Figure~\ref{fig:dataset_statistics}.
 
 \subsection{Features}
 
-The predictors used consist of 27 target-disease pair features, 5 target-specific features and 1 disease-specific feature. These are listed in Supplementary~Table~\ref{tab:features}. The target and disease specific features are chosen carefully such that they are either capable of being associated with years in which events supporting them occurred or result from large-scale, unbiased methods that do not favor well-studied or drugged targets/diseases. Examples of this include target-specific tissue expression specificity scores computed from Human Protein Atlas \cite{PMID:25613900} and LOEUF \cite{PMID:32461654} scores from gnomAD. Simply put, our dataset combines scores from Open Targets for target-disease evidence and a select subset of target prioritisation \cite{OT23.12release} fields with almost no modifications, other than to add target and disease specific indicators of maximum trial phases reached and two extra genetic association features.
+The features used throughout this study consist of 27 target-disease pair predictors, 5 target-specific predictors and 1 disease-specific predictor. These are listed in Table~\ref{tab:features}. The target and disease specific features are chosen carefully such that they are either capable of being associated with years in which events supporting them occurred or result from large-scale, unbiased methods that do not favor well-studied or drugged targets/diseases. Examples of this include target-specific tissue expression specificity scores computed from Human Protein Atlas \cite{PMID:25613900} and LOEUF \cite{PMID:32461654} scores from gnomAD. Simply put, our dataset combines scores from Open Targets for target-disease evidence and a select subset of target prioritisation \cite{OT23.12release} fields with almost no modifications, other than to add target and disease specific indicators of maximum trial phases reached and two extra genetic association features.
 
 \subsection{Models}
+\label{sec:models}
 
-We train a variety of models including constrained and unconstrained linear and tree models. The constrained variants of these models force effects of all features to increase monotonically. This is possible with no feature transformations because all scores in Open Targets are constructed such that higher scores are presumed to be advantageous. We also apply these models to our evaluation dataset using several feature ablations in order to assess the value of groups of related features.
+We train a variety of models including constrained and unconstrained linear and tree models. The constrained variants of these models force effects of all features to increase monotonically, i.e. all effects are constrained to be non-negative. This is possible with no underlying feature transformations because all scores in Open Targets are constructed such that higher scores are presumed to be advantageous. 
 
-In order to compare these models to an Open Targets composite score, we use an equally weighted sum of all scores except for those assigned lower weights in \cite{OTweights}. Scores from these sources are multiplied by the corresponding weight before being summed.
+We also apply these models to our evaluation dataset using several feature ablations in order to assess the value of groups of related features. We refer to a "core" feature set consisting of all features listed in Table~\ref{tab:features} except for the sole feature capturing the time since a target-disease pair first entered phase 2 trials (i.e. \colorbox{Gainsboro}{target\_disease\_\_time\_\_transition}). Combinations of learning algorithms for the models and the feature sets to which they are applied are referred to using the following convention:
+
+\begin{itemize}
+  \item \textbf{RDG}: Constrained, L2-regularized linear regressor (a.k.a. "Ridge regressor") fit with all core features
+  \item \textbf{RDG-T}: \textbf{RDG} fit with all features instead of only core features, where the only difference is the inclusion of time since phase 2 transition for a TD pair
+  \item \textbf{RDG-X}: \textbf{RDG} fit \textit{without} human clinical and genetic evidence features
+  \item \textbf{GBM}: Constrained, gradient-boosted machine with fit with all core features
+  \item \textbf{GBM-T}: \textbf{GBM} fit with all features instead of only core features
+  \item \textbf{OTS}: Open Targets composite score
+\end{itemize}
+
+The omitted human clinical and genetic evidence features for the RDG-X model are all of those in Table~\ref{tab:features} with the midfix "clinical" or "genetic\_association". We omit these features specifically because they are known or expected to comprise good predictors of human clinical success, so their exclusion examines the extent to which only literature and animal model evidence along with target-specific properties accomplish this task.
+
+In order to compare these models to an Open Targets composite score (OTS), we use an equally weighted sum of all scores from individual sources except for those assigned lower weights in \cite{OTweights}. Scores from these sources are multiplied by the corresponding weight before being summed and only the TD-specific features of Table~\ref{tab:features} are used. Neither the target/disease specific features nor the time since phase 2 transition feature are included in this calculation.
 
 \subsection{Performance}
 \label{sec:results_performance}
 
-Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study -- a constrained, linear L2-regularized model referred to from here on as "RDG" (short for ridge regression) -- ranks TD pairs by comparison to a composite score from Open Targets ("OTS"). The relative risk (RR) metric used in this comparison as well as all others where not specified otherwise is defined as:
+\subsubsection{Open Targets comparison}
+
+Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study, RDG, ranks TD pairs by comparison to a composite score from Open Targets, OTS. The relative risk (RR) metric used in this comparison as well as all others where not specified otherwise is defined as:
 
 \begin{equation}
   \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
 \end{equation}
 
-The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it also uses time since the phase 2 transition as a predictive factor as well as all others. We observe that the use of this information almost universally improves standard performance metrics like ROC (receiver operating characteristic) and AP (average precision), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. This is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion}). As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They are, however, a useful performance ceiling towards which future work could build.
-
-A subset of therapeutic areas was used for this analysis and this is reflected in both the mean estimates and distributions of Figure~\ref{fig:performance_across_ta}. A full list of these can be seen in Supplementary~Figure~\ref{fig:relative_risk_by_ta}, which also shows the RR estimates used in any summary statistics across therapeutic areas. These were selected based on criteria described in Section~\ref{sec:methods}. Lastly, Supplementary~Figure~\ref{fig:relative_risk_dist_across_ta} shows RR distributions by model with the significance of their differences.
+The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it uses time since the phase 2 transition as a predictive factor in addition to all others. We observe that the use of this information almost universally improves standard performance metrics like receiver operating characteristic (ROC) and average precision (AP), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. More implications of this and opportunities it may imply are discussed in Section~\ref{sec:discussion}. As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They do, however, present a useful performance ceiling towards which future work might build.
 
 \begin{figure}[!htb]
   \centering
-  \captionsetup[subfigure]{labelformat=empty,width=.9\linewidth}
+  \captionsetup{width=.9\linewidth}
+  \captionsetup[subfigure]{labelformat=empty}
   \subfloat[\centering]{
     \begin{overpic}[width=.57\textwidth]{relative_risk_mean_across_ta.pdf}
       \put(50, -3) {(a)}
@@ -115,45 +131,38 @@ A subset of therapeutic areas was used for this analysis and this is reflected i
     \end{overpic}
   }
   \caption{
-    \textbf{Statistical learning optimizes expected target-disease pair advancement rates using longitudinal evidence}.
-    (a) Equally-weighted average relative risk estimates across 13 therapeutic areas, by number of top rankings and 3 methods: RDG (ours), RDG-T (ours) and Open Targets composite scores. 
+    \textbf{Performance compared to Open Targets composite scores}.
+    (a) Equally-weighted average relative risk estimates across 13 therapeutic areas, by number of top rankings and 3 methods: RDG (ours), RDG-T (ours) and OTS (Open Targets composite scores). 
     (b) Receiver operating characteristic (ROC) and average precision scores across the same 13 therapeutic areas with no limit on the number of rankings. 
     See Supplementary~Figure~\ref{fig:relative_risk_by_ta} for raw data underlying (a).
   }
   \label{fig:performance_across_ta}
 \end{figure}
 
-The relative risk estimates from the RDG model were also compared to univariate relative risk scores in Figure~\ref{fig:relative_risk_core_features}. This clearly implicates genetic features as being the most precise predictors, albeit with a relatively low frequency compared to others. Similar comparisons for target and disease specific features can be seen in Supplementary~Figure~\ref{fig:relative_risk_static_features}. These suggest that past clinical success for targets and diseases (independent of pairings) are likely to be highly predictive of advancement as well, while genetic constraint and expression specificity of targets also exhibit modest but significant effects.
+We also note that Figure~\ref{fig:performance_across_ta} presents average RR estimates drawn across a subset of therapeutic areas, and the criteria used to select them is described more in Section~\ref{sec:methods}. A full list of therapeutic areas meeting these criteria can be seen in Supplementary~Figure~\ref{fig:relative_risk_by_ta} along with the RR estimates summarized in Figure~\ref{fig:performance_across_ta}. Furthermore, a comparison of the distribution of these estimates by model is presented in Supplementary~Figure~\ref{fig:relative_risk_dist_across_ta} along with the statistical significance of their differences.
 
-\begin{figure}[!htb]
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
-  \caption{
-    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
-    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} correspond to results for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
-  }
-  \label{fig:relative_risk_core_features}
-\end{figure}
+\subsubsection{Genetic benchmark comparison}
 
+In order to establish baseline levels of success and coverage across TD pairs, we examine ranking performance in comparison to well established, univariate indicators of genetic support in Figure~\ref{fig:relative_risk_by_limit}. This figure presents OMIM and GWAS baselines, in the parlance of \cite{King2019-rc}, \cite{Nelson2015-eg} and \cite{Minikel2023.06.23.23291765}, as well as an intermediate baseline from the European Variation Archive (EVA) \cite{PMID:34718739} containing evidence predominantly from ClinVar \cite{PMID:24234437}.
 
-In order to establish baseline levels of success and coverage across TD pairs, we refer to several of the univariate features in Figure~\ref{fig:relative_risk_core_features} throughout this study. Specifically, the \colorbox{Gainsboro}{omim} and \colorbox{Gainsboro}{ot\_genetics\_portal} features correspond to OMIM and GWAS baselines in the parlance of \cite{King2019-rc}, \cite{Nelson2015-eg} and \cite{Minikel2023.06.23.23291765}. We also use the \colorbox{Gainsboro}{eva} feature as a baseline for ClinVar support, which has discriminative capabilities somewhere between these two. The extent to which the RDG model meets or exceeds these benchmarks in both relative risk for advancement and TD pair coverage is illustrated in Figure~\ref{fig:relative_risk_by_limit}.
+One key objective of this study is to determine if any model, e.g. RDG, can sort TD pairs with genetic support such that at least some portion of that sorted list has a likelihood of advancement that consistently exceeding what is expected from any one source of genetic support alone. We find that this goal is met and exceeded by the RDG model, which actually identifies more TD pairs than those that have either EVA or GWAS support alone at an expected rate of advancement exceeding that of the single source (respectively). This does not appear to be the case with the OMIM baseline, however the lack of examples in our evaluation dataset with OMIM support makes any determination difficult. See Section~\ref{sec:results_opportunities} for more on how these benchmarks are employed to contextualize opportunities among undeveloped TD pairs and Supplementary~Figure~\ref{fig:top_evaluation_predictions} for top predictions from the RDG model. This latter, supplementary figure further emphasizes our focus on prioritizing opportunities beyond those with genetic support and provides examples of TD pairs with multiple lines of evidence.
 
 \begin{figure}[!htb]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{relative_risk_by_limit.pdf}
   \caption{
-    \textbf{RDG performance versus genetic support benchmarks across all therapeutic areas}. The RR estimates for each benchmark are based on the presence of the corresponding support across all TD pairs, and the number of pairs for which is present is represented by the horizontal bars extending horizontally from the y-axis. The bounds around the RDG RR estimates correspond to a 90\% confidence interval.
+    \textbf{Performance compared to genetic support benchmarks}. The RR estimates for each benchmark are based on the presence of the corresponding support across all TD pairs, and the number of pairs for which is present is represented by the horizontal bars extending horizontally from the y-axis. The bounds around the RDG RR estimates correspond to a Katz 90\% confidence interval.
   }
   \label{fig:relative_risk_by_limit}
 \end{figure}
 
-One objective of this study is to determine if any model, e.g. RDG, could sort TD pairs with genetic support such that at least some portion of that sorted list had a likelihood of advancement that consistently exceeds what is expected from any one source of genetic support alone. As a hypothetical example, we wanted to determine if the top 50 TD pairs out of 200 with GWAS support were more likely to advance than all 200 overall. We find that this goal is met and exceeded by the RDG model, which actually identifies more TD pairs than those that have either EVA or GWAS support alone at an expected rate of advancement exceeding that of the single source (respectively). This does not appear to be the case with the OMIM baseline, however the lack of examples in our evaluation dataset with OMIM support makes any determination difficult. See Section~\ref{sec:results_opportunities} for more on how these benchmarks are employed to contextualize opportunities among undeveloped TD pairs.
+We also note that Supplementary~Figure~\ref{fig:relative_risk_core_features} shows confidence intervals for each of the genetic benchmarks of Figure~\ref{fig:relative_risk_by_limit} in isolation, as well as all other target-disease-specific evidence sources, in addition to confidence intervals for the RDG model at various top ranking cutoffs. Similar comparisons for target-specific and disease-specific features can be seen in Supplementary~Figure~\ref{fig:relative_risk_static_features}. These findings suggest that 1) genetic support for TD pairs is highly predictive but rare, 2) human clinical support for targets and diseases in isolation is also predictive while being more common and 3) constraint and expression specificity of targets exhibit modest but significant effects. While only human clinical evidence appears to have a prognostic value rivaling that of genetic support when considered on a univariate basis, the combined influence of non-genetic, non-clinical evidence is examined in Section~\ref{sec:model_comparison} where a model using only this information, RDG-X, still outperforms Open Targets composite scores by all measures.
 
-\subsection{Models}
+\subsubsection{Model comparison}
+\label{sec:model_comparison}
 
-The primary model for this analysis, RDG, is a constrained, L2-regularized linear regressor. Alternatives to this choice we explore include constrained and unconstrained gradient-boosted machine (GBM) models fit with the LightGBM \cite{LightGBM} algorithm as well as unconstrained L2-regularized linear regressors (i.e. RDG with no constraints). The performance of these alternatives, as quantified by relative risk estimates among top predictions, is illustrated in Figure~\ref{fig:performance_metric_mean_across_ta}. 
+Figure~\ref{fig:performance_metric_mean_across_ta} presents average performance across therapeutic areas for select combinations of learning algorithm, constraint type and feature group described in Section~\ref{sec:models}. Several key findings illustrated in this figure are:
 
 \begin{figure}[!htb]
   \centering
@@ -163,25 +172,28 @@ The primary model for this analysis, RDG, is a constrained, L2-regularized linea
     \put(84.7, 22.5) {(b)}
   \end{overpic}
   \caption{
-    \textbf{Performance of ...}.
+    \textbf{Performance across model algorithms and feature ablation groups}.
+    Average precision (AP) and receiver operating characteristic (ROC) scores with relative risk (RR) at ranking cutoffs denoted by \colorbox{Gainsboro}{RR@N}. 
+    (a) Performance across constrained RDG models using different groups of features as described in Section~\ref{sec:models}
+    (b) Performance across constrained (\colorbox{Gainsboro}{[+]}) and unconstrained (\colorbox{Gainsboro}{[+/-]}) linear and gradient-boosted models using the core feature set.
   }
   \label{fig:performance_metric_mean_across_ta}
 \end{figure}
 
+\begin{enumerate}
+  \item The RDG-T model achieves far higher ROC and AP scores through the use of the time since transition feature, which indicates the number of years a TD pair has been underdevelopment after having reached phase 2.
+  \item The RDG model, however, matches or exceeds RDG-T in performance among top TD pairs
+  \item The RDG-X model, using no human clinical or genetic evidence linked to a disease, outperforms the Open Targets composite score and nearly matches the performance of the RDG model beyond top rankings
+  \item Linear models outperform gradient-boosting models by nearly all measures
+  \item Constrained linear models outperform unconstrained linear models by nearly all measures
+\end{enumerate}
 
-We conclude from these results that 1) linear models outperform, or are at least not worse, than tree models when time is not used as a predictor and 2) non-negativity constraints in linear models result in greater performance. This is consistent with our expectation that all Open Targets scores should have monotonically increasing effects on the likelihood of success, since they were designed with this intent.
 
-\subsection{Sensitivity}
+We conclude from these results that constrained linear models are an optimal choice for this problem due both to their greater performance and interpretability. This interpretability is illustrated more in Section~\ref{sec:effects} and owed much to the effort Open Targets has already undertaken to construct evidence scores such that they can be assumed to have a monotonically increasing effect on the likelihood that a causal relationship exists between a target and a disease.
 
-In order to validate the stability of our findings in Section~\ref{sec:results_performance}, we repeat this analysis across 18 different configurations listed in Supplementary~Table~\ref{tab:sensitivity_configurations}. This includes 3 separate versions of Open Targets, 3 choices for the year defining the split between training and evaluation data and 2 choices for the length of the minimum advancement window (in years).
-
-We find that the mean RR values from the RDG model consistently exceed the OTS model in all configurations among the very highest rankings (N=10) and also exceed the OTS model in all configurations except for 1 for N between 20 and 60. This data is shown in Supplementary~Figure~\ref{fig:sensitivity_relative_risk}. The significance of these differences drops notably after N=40, which can be seen in the distribution of p-values from a Wilcoxon signed-rank test shown in Supplementary~Figure~\ref{fig:sensitivity_p_values}.
-
-\subsection{Predictions}
-
-Top predictions from the RDG model over the evaluation dataset are shown in Supplementary~Figure~\ref{fig:top_evaluation_predictions}. This figure demonstrates that there are a significant number of TD pairs with genetic support from many sources and that the combined effects of non-genetic features also substantially influence these rankings. 
 
 \subsection{Effects}
+\label{sec:effects}
 
 The coefficients learned by the RDG model, and the average effects they have across the evaluation dataset, are shown in Figure~\ref{fig:effect_sizes}. This model most highly prioritizes genetic signals that have the greatest coverage, i.e. associations from GWAS studies through the \colorbox{Gainsboro}{ot\_genetics\_portal} feature and associations from any curated clinical genetics source, i.e. EVA, Orphanet, UniProt, Genomics England, ClinGen and gene2phenotype, via the \colorbox{Gainsboro}{curated} \vspace*{0mm} feature.  Notably, literature and target/disease specific clinical features also have substantial effects, followed by indicators of animal evidence and target genetic constraint / expression specificity. Any features not shown were deflated to have no effect, which is possible in this model due to the non-negativity constraint. One such feature worth emphasizing is transcriptomic evidence from Expression Atlas. We found this somewhat surprising, but it is supported by arguments against transcript over/under expression as an indicator of genes that influence disease rather than the other way around \cite{PMID:34561431}.
 
@@ -195,7 +207,8 @@ The coefficients learned by the RDG model, and the average effects they have acr
 	\label{fig:effect_sizes}
 \end{figure}
 
-It is worth noting that the discordance between the coefficients and the average feature effects of Figure~\ref{fig:effect_sizes} arises from both the frequency with which features exist and the distribution of their underlying scores. Scores for many clinical genetics features (e.g. OMIM, Genomics England, UniProt) are very frequently absent or close to 1. By comparison, scores for literature associations are typically far lower, even when limited only to cases where they exist, with a median value of 0.12 (mean=.23) in the evaluation data.
+It is worth noting that the discordance between the coefficients and the average feature effects of Figure~\ref{fig:effect_sizes} arises from both the frequency with which features exist and the distribution of their underlying scores. Scores for many clinical genetics features (e.g. OMIM, Genomics England, UniProt) are very frequently absent or close to 1. By comparison, scores for literature associations are typically far lower, even when limited only to cases where they exist, with a median value of 0.12 (mean=.23) in the evaluation data. This is why the \colorbox{Gainsboro}{europepmc} feature has a relatively large associated coefficient and a much smaller average effect on predictions.
+
 
 \subsection{Opportunities}
 \label{sec:results_opportunities}
@@ -256,7 +269,7 @@ We refer to this as "inflation risk" so as not to confuse it with the relative r
 
 We find that evidence from Reactome is the worst offender by this metric, implying that it often only arises for TD pairs after a certain level of clinical success has been attained. We also find that long-running aggregators/curators of published research often focused on individual diseases/phenotypes, like Expression Atlas, IMPC, CGS and Cancer Biomarkers exhibit this form of inflation as well.
 
-Sources of genetic evidence appear to be much less inflated, or have too little data to reach significance. This is to be expected for GWAS evidence arising from genome-wide, phenome-wide biobank consortia, however much of historical GWAS evidence is not phenome-wide. More context on how much this is likely to matter comes from \cite{PMID:37612393} in which it was estimated that as few as 6\% of 500 FDA-approved targets for non-cancer drugs arose from programs highly motivated by pre-existing genetic support and that "the remaining 94\% were probably identified using conventional pharmacology, biochemistry or molecular biology approaches". We then speculate that if the initiation of new drug programs was not historically motivated highly by the existence of genetic support, then the incentives for pursing new genetic evidence based on clinical and commercial success are likely to be minimized. This, in conjunction with existing precedent \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765,Razuvayevskaya2023.02.07.23285407,PMID:30652614,PMID:35804044} and our inflation results, ultimately led us to the use of genetic evidence without temporalization. In other words, we do not treat genetic evidence as longitudinal features like all others associated with TD pairs. A breakdown of which features are treated in which manner is provided in Supplementary~Table~\ref{tab:features}.
+Sources of genetic evidence appear to be much less inflated, or have too little data to reach significance. This is to be expected for GWAS evidence arising from genome-wide, phenome-wide biobank consortia, however much of historical GWAS evidence is not phenome-wide. More context on how much this is likely to matter comes from \cite{PMID:37612393} in which it was estimated that as few as 6\% of 500 FDA-approved targets for non-cancer drugs arose from programs highly motivated by pre-existing genetic support and that "the remaining 94\% were probably identified using conventional pharmacology, biochemistry or molecular biology approaches". We then speculate that if the initiation of new drug programs was not historically motivated highly by the existence of genetic support, then the incentives for pursing new genetic evidence based on clinical and commercial success are likely to be minimized. This, in conjunction with existing precedent \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765,Razuvayevskaya2023.02.07.23285407,PMID:30652614,PMID:35804044} and our inflation results, ultimately led us to the use of genetic evidence without temporalization. In other words, we do not treat genetic evidence as longitudinal features like all others associated with TD pairs. A breakdown of which features are treated in which manner is provided in Table~\ref{tab:features}.
 
 \section{Conclusion}
 
@@ -269,7 +282,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \item Cover limitations with OT concerning temporalization for both evidence and drug approvals, and why only transitions from phase 2 are relevant for this work
   \item Discuss the possibility to do prospective evaluation with OT snapshots
   \item Discuss how typical classifier metrics are inadequate for this problem
-  \item Talk about how the inclusion of time greatly improves performance and suggests it may be possible to fill in this proxy with predictors for more specific early indicators of other reasons trials fail
+  \item Expand on how the inclusion of time greatly improves tail performance and mention that this is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion})
   \item We are focusing on prioritizing among targets/indications with genetic support, rather than expanding this space to find opportunities with weaker support
   \item "There is evidence that a 9.6\% vs. 13.8\% success rate for drugs from phase 1 trials to approval may mean a \$480 million difference in the median research and development cost required to bring a new drug to the market (Wouters, McKee, and Luyten 2020)." \cite{PMID:34930919}
   \item From \cite{PMID:33262371}: "It is important to bear in mind therefore that what we are measuring when looking at historical trial outcomes is not an unbiased measure of any given gene's true disease associations, but rather a view on how useful a given evidence source or analytical method has been for choosing drug targets based on current and historical drug discovery practices. Dramatic changes in these practices in the future could render some of our conclusions obsolete, though the fundamental observation that genetic association itself is retained in molecular networks will remain valid."
@@ -282,6 +295,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \begin{itemize}
   \item Discuss why all target prioritisation data fields are not used due to the potential leakage they may impose (e.g. target families, GO annotations, etc.)
   \item Describe how therapeutic areas were selected based on having at least 100 TD pairs with target-disease-specific evidence of any kind and with explicit omissions: ("biological\_process", "pregnancy or perinatal disease", "injury, poisoning or other complication", "pregnancy or perinatal disease", "medical procedure", "infectious disease", "animal disease")
+  \item RDG models are fit using the \colorbox{Gainsboro}{Ridge} implementation from scikit-learn and GBM models are fit using the LightGBM \cite{LightGBM} algorithm
   \item Training/evaluation results are limited by temporalization while the present-day predictions are not
   \item OMIM is defined as EVA associations with publications
   \item The "genetic\_association\_\_curated" field is a union of all genetic association sources other than "gene\_burden" and "ot\_genetics\_portal"
@@ -291,38 +305,11 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \item RDG is always trained on all features, but only applied to feature subsets where relevant
 \end{itemize} 
 
-\section{Supplementary Material}
+\section{Appendix}
 
 \input{assets/features_table.tex}
 
-\input{assets/tractability_bucket_table.tex}
-
-\input{assets/sensitivity_configurations.tex}
-
-\begin{figure}
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_by_ta.png}
-  \caption{
-    \textbf{Relative risk scores by method, benchmark and therapeutic area}.
-    The \textbf{average} therapeutic area indicates mean values across all others except for \textbf{all}, which is an ungrouped estimate across all diseases regardless of therapeutic area.
-  }
-  \label{fig:relative_risk_by_ta}
-\end{figure}
-
-
-\begin{figure}
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{top_evaluation_predictions.png}
-  \caption{
-    \textbf{Top RDG model evaluation dataset predictions}.
-    Feature contributions are shown as the product of their underlying values and the RDG coefficients. The \textbf{advanced} field indicates whether the associated TD pair advanced beyond phase 2 as of 2024.
-  }
-  \label{fig:top_evaluation_predictions}
-\end{figure}
-
-\begin{figure}
+\begin{figure}[!htb]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{dataset_statistics.png}
@@ -331,19 +318,25 @@ We have demonstrated that simple machine learning methods applied to longitudina
   }
   \label{fig:dataset_statistics}
 \end{figure}
-  
-\begin{figure}
+
+
+\section{Supplementary Material}
+
+
+\subsection{Performance}
+
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_dist_across_ta.pdf}
+  \includegraphics[width=1\textwidth]{relative_risk_core_features.pdf}
   \caption{
-    \textbf{Relative risk distributions across select therapeutic areas}.
-    P-values are computed from a one-sided Wilcoxon signed-rank test with the alternative that the RDG model RR averages across therapeutic areas exceed OTS averages.
+    \textbf{Performance of individual features and predictive scores as measured by relative risk}.
+    RDG model results denoted by \colorbox{Gainsboro}{rdg@N} indicate performance for the \colorbox{Gainsboro}{N} top TD pairs. The same convention is used for \colorbox{Gainsboro}{literature} evidence and the \colorbox{Gainsboro}{time\_\_transition\_\_eq\_X} convention denotes RR estimates when the time since the phase 2 transition is equal to \colorbox{Gainsboro}{X} years. The \colorbox{Gainsboro}{omim}, \colorbox{Gainsboro}{eva}, and \colorbox{Gainsboro}{ot\_genetics\_portal} features correspond to the OMIM, EVA and OTG baselines of Figure~\ref{fig:relative_risk_by_limit}, respectively. All other features are assessed based on their existence. The counts along the origin indicate how many TD pairs were used to compute the RR numerator.
   }
-  \label{fig:relative_risk_dist_across_ta}
+  \label{fig:relative_risk_core_features}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{relative_risk_static_features.pdf}
@@ -354,8 +347,29 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \label{fig:relative_risk_static_features}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{relative_risk_by_ta.png}
+  \caption{
+    \textbf{Relative risk scores by method, benchmark and therapeutic area}.
+    The \textbf{average} therapeutic area indicates mean values across all others except for \textbf{all}, which is an ungrouped estimate across all diseases regardless of therapeutic area.
+  }
+  \label{fig:relative_risk_by_ta}
+\end{figure}
+  
+\begin{figure}[H]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{relative_risk_dist_across_ta.pdf}
+  \caption{
+    \textbf{Relative risk distributions across select therapeutic areas}.
+    P-values are computed from a one-sided Wilcoxon signed-rank test with the alternative that the RDG model RR averages across therapeutic areas exceed OTS averages.
+  }
+  \label{fig:relative_risk_dist_across_ta}
+\end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{relative_risk_model_features.pdf}
@@ -365,7 +379,26 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \label{fig:relative_risk_model_features}
 \end{figure}
 
-\begin{figure}
+
+\subsection{Predictions}
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{top_evaluation_predictions.png}
+  \caption{
+    \textbf{Top RDG model evaluation dataset predictions}.
+    Feature contributions are shown as the product of their underlying values and the RDG coefficients. The \textbf{advanced} field indicates whether the associated TD pair advanced beyond phase 2 as of 2024.
+  }
+  \label{fig:top_evaluation_predictions}
+\end{figure}
+
+
+\subsection{Opportunities}
+
+\input{assets/tractability_bucket_table.tex}
+
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=.9\textwidth]{top_opportunity_predictions.png}
@@ -376,7 +409,15 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \end{figure}
 
 
-\begin{figure}
+\subsection{Sensitivity}
+
+In order to validate the stability of our findings in Section~\ref{sec:results_performance}, we repeat this analysis across 18 different configurations listed in Supplementary~Table~\ref{tab:sensitivity_configurations}. This includes 3 separate versions of Open Targets, 3 choices for the year defining the split between training and evaluation data and 2 choices for the length of the minimum advancement window (in years).
+
+We find that the mean RR values from the RDG model consistently exceed the OTS model in all configurations among the very highest rankings (N=10) and also exceed the OTS model in all configurations except for 1 for N between 20 and 60. This data is shown in Supplementary~Figure~\ref{fig:sensitivity_relative_risk}. The significance of these differences drops notably after N=40, which can be seen in the distribution of p-values from a Wilcoxon signed-rank test shown in Supplementary~Figure~\ref{fig:sensitivity_p_values}.
+
+\input{assets/sensitivity_configurations.tex}
+
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{sensitivity_relative_risk.pdf}
@@ -387,7 +428,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \label{fig:sensitivity_relative_risk}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{sensitivity_p_values.pdf}

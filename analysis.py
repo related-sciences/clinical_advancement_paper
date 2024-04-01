@@ -1416,6 +1416,11 @@ def get_primary_models() -> PandasDataFrame:
                 "display_color": "#7f7f7f",  # grey
             },
             {
+                "model": "rdg__no_tgc__positive",
+                "model_slug": "RDG-X",
+                "display_color": "#7f7f7f",  # grey
+            },
+            {
                 "model": "gbm__all__unconstrained",
                 "model_slug": "GBM-T",
                 "display_color": "#ffffff",  # white
