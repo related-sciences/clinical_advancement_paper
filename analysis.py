@@ -988,6 +988,53 @@ def get_feature_statistics(
     return feature_statistics
 
 
+def get_feature_presence(features: PandasDataFrame) -> PandasDataFrame:
+    def get_feature_group_label(fg: str) -> str:
+        entity, group = fg.split("__")
+        if entity == "target_disease":
+            entity = "pair"
+        if "phase_2" in group:
+            group = "phase 2+ trials"
+        elif group == "outcome":
+            group = "advanced beyond phase 2"
+        elif group == "no_data":
+            group = "no evidence"
+        else:
+            group = f"{group} evidence"
+        return f"{entity} has {group.replace('_', ' ')}"
+
+    # fmt: off
+    return (
+        features
+        .assign(target_disease_id=lambda df: df[['target_id', 'disease_id']].apply(tuple, axis=1))
+        .set_index('target_disease_id')
+        .assign(
+            target__phase_2=lambda df: df["target__clinical__phase_max__reached"] > 2,
+            disease__phase_2=lambda df: df["disease__clinical__phase_max__reached"] > 2,
+        )
+        .filter(regex='^target__phase|^disease__phase|^target_disease__(?!clinical|time)')
+        .assign(target_disease__no_data=lambda df: (
+            df.filter(regex='^target_disease__(?!outcome)')
+            .pipe(lambda df: df.fillna(0) <= 0)
+            .all(axis=1)
+        ))
+        .pipe(lambda df: df.where(df > 0))
+        .pipe(apply, lambda df: logger.info(
+            f"The following features will be used to calculate presence: {df.columns.tolist()}"
+        ))
+        .rename_axis("feature", axis="columns")
+        .stack().rename("value").reset_index()
+        .assign(feature_group=lambda df: df['feature'].str.split('__').str[:2].str.join("__"))
+        .groupby("feature_group")["target_disease_id"].unique()
+        .rename("pairs").reset_index()
+        .assign(n_pairs=lambda df: df['pairs'].apply(len))
+        .assign(feature_group_label=lambda df: df['feature_group'].map(get_feature_group_label))
+        .sort_values("n_pairs", ascending=True)
+        [["feature_group", "feature_group_label", "n_pairs", "pairs"]]
+    )
+    # fmt: on
+
+
 def get_feature_relative_risk(
     ds: Dataset,
     model_names: list[str] | None = None,
@@ -2385,6 +2432,10 @@ def get_assets_directory() -> Path:
     if not path.exists():
         raise ValueError(f"Figure directory {path} does not exist")
     return path
+
+
+def get_asset_path(filename: str) -> Path:
+    return get_assets_directory() / filename
 
 
 def save_figure(filename: str, enable: bool) -> Callable[[Any], Any]:

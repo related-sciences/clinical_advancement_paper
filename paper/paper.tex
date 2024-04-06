@@ -105,9 +105,19 @@ In order to compare these models to an Open Targets composite score (OTS), we us
 \subsection{Performance}
 \label{sec:results_performance}
 
+\subsubsection{Metrics}
+
+The primary performance metric used in this study is relative risk (RR). One reason we use this metric is to maintain consistency similar studies like \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765}.
+
+as our primary performance indicator along with secondary measures of performance in more familiar classifier metrics like Receiver Operating Characteristic (ROC) and Average Precision (PR).    as well as all others where not specified otherwise is defined as:
+
+\begin{equation}
+  \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
+\end{equation}
+
 \subsubsection{Open Targets comparison}
 
-Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study, RDG, ranks TD pairs by comparison to a composite score from Open Targets, OTS. The relative risk (RR) metric used in this comparison as well as all others where not specified otherwise is defined as:
+Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study, RDG, ranks TD pairs by comparison to a composite score from Open Targets, OTS. This comparison highlights relative risk (RR) as our primary performance indicator along with secondary measures of performance in more familiar classifier metrics like Receiver Operating Characteristic (ROC) and Average Precision (PR).    as well as all others where not specified otherwise is defined as:
 
 \begin{equation}
   \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
@@ -307,7 +317,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 
 \section{Appendix}
 
-\input{assets/features_table.tex}
+\input{assets/feature_table.tex}
 
 \begin{figure}[!htb]
   \centering
@@ -322,6 +332,30 @@ We have demonstrated that simple machine learning methods applied to longitudina
 
 \section{Supplementary Material}
 
+\subsection{Features}
+
+\begin{figure}[H]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \captionsetup[subfigure]{labelformat=empty}
+  \subfloat[\centering]{
+    \begin{overpic}[width=.9\textwidth]{feature_presence_unscaled.pdf}
+      \put(102, 20) {(a)}
+    \end{overpic}
+  }
+  \qquad
+  \subfloat[\centering]{
+    \begin{overpic}[width=.9\textwidth]{feature_presence_scaled.pdf}
+      \put(102, 20) {(b)}
+    \end{overpic}
+  }
+  \caption{
+    \textbf{Evaluation dataset feature presence}.
+    (a) Feature presence drawn to scale. 
+    (b) Feature presence visually rescaled to fit counts. 
+  }
+  \label{fig:feature_presence}
+\end{figure}
 
 \subsection{Performance}
 

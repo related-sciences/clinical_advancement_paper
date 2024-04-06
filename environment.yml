@@ -42,6 +42,7 @@ dependencies:
   - zarr=2.10.3
   - pip=22.3.1
   - pip:
+    - supervenn==0.4.2
     - grpcio==1.51.1
     - hypothesis==6.59.0
     - jupyter-black==0.3.3
