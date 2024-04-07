@@ -65,7 +65,7 @@ This study examines the extent to which the outcomes of clinical trials can be p
 
 \section{Introduction}
 
-It has been well established that drugs with human genetic evidence linking their respective targets to indications in clinical trials are more likely to succeed \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765,Razuvayevskaya2023.02.07.23285407,PMID:30652614,PMID:24833294,PMID:35804044,PMID:36963162}. This information has been used to devise many target and target-disease ranking algorithms based primarily on a synthesis of multiple genetic signals alone \cite{PMID:38172303,Koscielny2017-rr,PMID:31253980}. It is also possible to expand the breadth of this genetic support to more targets/diseases based on knowledge graphs, protein interactions and/or disease ontologies \cite{PMID:33262371,Bao2022-bq,Sadler2023-xd,PMID:36087372,PMID:36823319}. To our knowledge, all such expansion methods identify a larger space of opportunities at the expense of expected success rates. This is not a focus of this work as we aim, instead, to establish a framework for identifying targets/diseases with the very highest possible likelihood of success first. This is accomplished by integrating human clinical, genetic/genomic, transcriptomic and proteomic data as well as cell/animal model evidence, pathway information and basic literature metrics from Open Targets \cite{Koscielny2017-rr} in a simple statistical modeling framework. It can be contrasted with far more integrative methods that rely on neural and/or graph models over extensive knowledge graphs \cite{Paliwal2020-hr,PMID:33741907,pittala2020relationweighted,PMID:32750869}, which are more complex and difficult to interpret. We believe a desirable middle ground between these approaches and those that aim to combine many orthogonal indicators of success through expert knowledge in heuristic systems \cite{PMID:38404138,Koscielny2017-rr} would: 1) permit inclusion of many types of evidence from many sources, 2) be highly interpretable, 3) support expert judgement where necessary, and 4) not require manual ranking/weighting schemes.
+It has been well established that drugs with human genetic evidence linking their respective targets to indications in clinical trials are more likely to succeed \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765,Razuvayevskaya2023.02.07.23285407,PMID:30652614,PMID:24833294,PMID:35804044,PMID:37803084,PMID:36963162}, and to a lesser extent, that the same may also be true for single-cell transcriptomic evidence \cite{Dann2024.04.04.24305313}. This information has been used to devise many target and target-disease ranking algorithms based primarily on a synthesis of multiple genetic signals alone \cite{PMID:38172303,Koscielny2017-rr,PMID:31253980}. It is also possible to expand the breadth of this genetic support to more targets/diseases based on knowledge graphs, protein interactions and/or disease ontologies \cite{PMID:33262371,Bao2022-bq,Sadler2023-xd,PMID:36087372,PMID:36823319}. To our knowledge, all such expansion methods identify a larger space of opportunities at the expense of expected success rates. This is not a focus of this work as we aim, instead, to establish a framework for identifying targets/diseases with the very highest possible likelihood of success first. This is accomplished by integrating human clinical, genetic/genomic, transcriptomic and proteomic data as well as cell/animal model evidence, pathway information and basic literature metrics from Open Targets \cite{Koscielny2017-rr} in a simple statistical modeling framework. It can be contrasted with far more integrative methods that rely on neural and/or graph models over extensive knowledge graphs \cite{Paliwal2020-hr,PMID:33741907,pittala2020relationweighted,PMID:32750869}, which are more complex and difficult to interpret. We believe a desirable middle ground between these approaches and those that aim to combine many orthogonal indicators of success through expert knowledge in heuristic systems \cite{PMID:38404138,Koscielny2017-rr} would: 1) permit inclusion of many types of evidence from many sources, 2) be highly interpretable, 3) support expert judgement where necessary, and 4) not require manual ranking/weighting schemes.
 
 A substantial challenge inherent to building such a system is the need to account for the longitudinal nature of knowledge discovery in biomedicine. This is vital because any method that optimizes for likely future clinical success based on historical clinical success may easily be biased by the non-random nature with which evidence is absent otherwise. We use only "temporalized" evidence, i.e. evidence for which timing of its emergence can be determined, and outcomes when training and evaluating our methods before ultimately applying them to present-day evidence with no restrictions on timing. We discuss motivations, prior research and our own analysis on how important this problem is for each source in Section~\ref{sec:results_inflation}.
 
@@ -102,28 +102,33 @@ The omitted human clinical and genetic evidence features for the RDG-X model are
 
 In order to compare these models to an Open Targets composite score (OTS), we use an equally weighted sum of all scores from individual sources except for those assigned lower weights in \cite{OTweights}. Scores from these sources are multiplied by the corresponding weight before being summed and only the TD-specific features of Table~\ref{tab:features} are used. Neither the target/disease specific features nor the time since phase 2 transition feature are included in this calculation.
 
+\subsection{Metrics}
+\label{sec:metrics}
+
+The primary performance metric used in this study is relative risk (RR). This metric is commonly used to assess univariate measures of genetic support \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765} and can be more intuitively understood, in the context of this study, as the probability that a TD pair among the top $N$ TD pairs as ranked by a particular method will advance beyond phase 2 trials divided by that same probability of advancement among TD pairs with a rank greater than $N$. This provides a means to compare multivariate, model-based methods to univariate methods on a common scale. More specifically, any RR metric reported for a model among top $N$ rankings is defined as:
+
+\begin{equation}
+  \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}
+\end{equation}
+
+and RR metrics reported for univariate methods based on Open Targets scores for a single type of evidence, where not stated otherwise, are defined as:
+
+\begin{equation}
+  \frac{P(advancement | score > 0)}{P(advancement | score = 0)}.
+\end{equation}
+
+The use of such a metric is essential for properly assessing performance in this forecasting problem. While we also report more common measures of classifier performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), neither of these adequately capture behavior in the upper extremes of rankings due the sparsity with which TD pair evidence is present for pairs that have ever entered phase 2 trials. This sparsity is further exacerbated in this study by the constraint that most of that evidence must have existed \textit{before} such trials began. Figure~\ref{fig:feature_presence} demonstrates this sparsity by showing that of all the TD pairs entering phase 2 trials for the first time between 2016 and 2022 in our evaluation dataset (N=9010), less than 2\% of them ever have evidence directly linking them other than literature co-mentions, which exist for 21\% of those pairs. These TD pairs do, however, very frequently have prior clinical evidence for their associated targets and diseases. Specifically, 8,425 (93.5\%) have a target and 6,855 (76.1\%) have a disease that had already been in phase 2 or later trials previously. Figure~\ref{fig:feature_presence} also demonstrates that a substantial fraction of these pairs that ultimately advance beyond phase 2 trials either have no direct evidence or have only prior clinical evidence for the target or disease alone, which means a comprehensive measure of classifier performance (e.g. ROC) is far more likely to reflect the extent to which disease-only historical, clinical information or target-only information -- including other attributes like conservation, essentiality and tissue expression -- can predict clinical success. Again, this is not our primary focus as we want to evaluate the maximum achievable performance in this forecasting problem, and we assert that this is best accomplished when one or more lines of target-disease-specific evidence are present.
+
+Reasonable alternative choices for this primary metric include those more common in information extraction literature or other machine learning studies with a focus on ranking rather than classification, such as mean reciprocal rank (MRR), precision at $k$ (P@k) and normalized discounted cumulative gain (NDCG) \cite{hoyt2022unified,moffat2022batch}. Precision at $k$ is the most similar among these to relative risk at $k$ since it is equivalent to the numerator in the relative risk calculation. We use relative risk instead because it is more intuitive than most ranking metrics, has well established analytical solutions for confidence intervals \cite{Katz1978-mo} and is consistent with prior work in this field.
+
+Lastly, we emphasize that the interpretation of "risk" for the relative risk metric is to be inverted in this context. A higher "risk" in this study actually corresponds to a greater probability of success. The name "Relative Success" is used for this metric instead in \cite{Minikel2023.06.23.23291765} even though it has the same underlying definition. We choose not to use this label because we also present generic performance measures like ROC and AP, thereby prioritizing consistency with a domain-independent nomenclature where possible.
+
 \subsection{Performance}
 \label{sec:results_performance}
 
-\subsubsection{Metrics}
-
-The primary performance metric used in this study is relative risk (RR). One reason we use this metric is to maintain consistency similar studies like \cite{Nelson2015-eg,King2019-rc,Minikel2023.06.23.23291765}.
-
-as our primary performance indicator along with secondary measures of performance in more familiar classifier metrics like Receiver Operating Characteristic (ROC) and Average Precision (PR).    as well as all others where not specified otherwise is defined as:
-
-\begin{equation}
-  \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
-\end{equation}
-
 \subsubsection{Open Targets comparison}
 
-Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study, RDG, ranks TD pairs by comparison to a composite score from Open Targets, OTS. This comparison highlights relative risk (RR) as our primary performance indicator along with secondary measures of performance in more familiar classifier metrics like Receiver Operating Characteristic (ROC) and Average Precision (PR).    as well as all others where not specified otherwise is defined as:
-
-\begin{equation}
-  \frac{P(advancement | rank >= N)}{P(advancement | rank < N)}.
-\end{equation}
-
-The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it uses time since the phase 2 transition as a predictive factor in addition to all others. We observe that the use of this information almost universally improves standard performance metrics like receiver operating characteristic (ROC) and average precision (AP), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. More implications of this and opportunities it may imply are discussed in Section~\ref{sec:discussion}. As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They do, however, present a useful performance ceiling towards which future work might build.
+Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model in this study, RDG, ranks TD pairs by comparison to a composite score from Open Targets, OTS. This comparison highlights relative risk (RR) as our primary performance indicator along with secondary measures of performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), as discussed more in Section~\ref{sec:metrics}. The third ranking method presented in Figure~\ref{fig:performance_across_ta}, "RDG-T", differs from the RDG model only in that it uses time since the phase 2 transition as a predictive factor in addition to all others. We observe that the use of this information greatly improves standard performance metrics like receiver operating characteristic (ROC) and average precision (AP), however it adds little to no value in rankings beyond a level where substantial relative risk increases can be observed. In other words, it constitutes an effective but coarse mechanism for ranking TD pairs while lacking the high precision of other factors like genetic support. More implications of this and opportunities it may imply are discussed in Section~\ref{sec:discussion}. As a more practical concern, we refrain from focusing on RDG-T, or the similar GBM-T model, because neither is readily applicable to undeveloped TD pairs for which the time since phase 2 transition is not available. They do, however, present a useful performance ceiling towards which future work might build.
 
 \begin{figure}[!htb]
   \centering
@@ -291,7 +296,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \begin{itemize}
   \item Cover limitations with OT concerning temporalization for both evidence and drug approvals, and why only transitions from phase 2 are relevant for this work
   \item Discuss the possibility to do prospective evaluation with OT snapshots
-  \item Discuss how typical classifier metrics are inadequate for this problem
+  \item Discuss why we present metrics like AP and ROC at all, and what kinds of use cases might maximize for something like ROC instead
   \item Expand on how the inclusion of time greatly improves tail performance and mention that this is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion})
   \item We are focusing on prioritizing among targets/indications with genetic support, rather than expanding this space to find opportunities with weaker support
   \item "There is evidence that a 9.6\% vs. 13.8\% success rate for drugs from phase 1 trials to approval may mean a \$480 million difference in the median research and development cost required to bring a new drug to the market (Wouters, McKee, and Luyten 2020)." \cite{PMID:34930919}
@@ -317,22 +322,9 @@ We have demonstrated that simple machine learning methods applied to longitudina
 
 \section{Appendix}
 
-\input{assets/feature_table.tex}
-
-\begin{figure}[!htb]
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{dataset_statistics.png}
-  \caption{
-    \textbf{Training and evaluation dataset summary statistics}.
-  }
-  \label{fig:dataset_statistics}
-\end{figure}
-
-
-\section{Supplementary Material}
-
 \subsection{Features}
+
+\input{assets/feature_table.tex}
 
 \begin{figure}[H]
   \centering
@@ -352,10 +344,23 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \caption{
     \textbf{Evaluation dataset feature presence}.
     (a) Feature presence drawn to scale. 
-    (b) Feature presence visually rescaled to fit counts. 
+    (b) Feature presence visually rescaled to fit labels and combinatorial patterns. 
   }
   \label{fig:feature_presence}
 \end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \includegraphics[width=1\textwidth]{dataset_statistics.png}
+  \caption{
+    \textbf{Training and evaluation dataset summary statistics}.
+  }
+  \label{fig:dataset_statistics}
+\end{figure}
+
+
+\section{Supplementary Material}
 
 \subsection{Performance}
 
