@@ -79,8 +79,36 @@ The prior works discussed so far can largely be categorized as either 1) target 
 In order to model clinical advancement for target-disease (TD) pairs, we first define "advancement" as progression beyond any particular trial phase across all drugs associated with any one TD pair as indicated by the presence of a later-stage trial. All results to follow consider only advancement beyond phase 2 due to limitations described in Section~\ref{sec:discussion}. This binary outcome is then predicted based on a list of features shown in Table~\ref{tab:features}. Information for each of these features is only used when it was published before the year \textbf{prior} to the first phase 2 trial observed, with an exception for genetic evidence discussed in Section~\ref{sec:results_inflation}. A training dataset is then formed by including only TD pairs where this first phase 2 year is between 1990 and 2015. The evaluation dataset then consists of all TD pairs entering phase 2 between 2016 and 2022, with a 2 year offset from the present year (2024) to allow enough time for some trials to complete. While the average phase 2 trial duration may be as low as 2 years \cite{fdaStepClinical}, other estimates would suggest half of them take longer than 2.9 years \cite{PMID:29394327}. This means a substantial fraction of outcomes are censored, that this is an important parameter to test sensitivity to and that time itself is likely to be a crucial covariate in this formulation. The distribution of these outcomes, the number of associated targets/diseases and a variety of other statistics on this dataset are presented in Supplementary~Figure~\ref{fig:dataset_statistics}.
 
 \subsection{Features}
+\label{sec:features}
 
-The features used throughout this study consist of 27 target-disease pair predictors, 5 target-specific predictors and 1 disease-specific predictor. These are listed in Table~\ref{tab:features}. The target and disease specific features are chosen carefully such that they are either capable of being associated with years in which events supporting them occurred or result from large-scale, unbiased methods that do not favor well-studied or drugged targets/diseases. Examples of this include target-specific tissue expression specificity scores computed from Human Protein Atlas \cite{PMID:25613900} and LOEUF \cite{PMID:32461654} scores from gnomAD. Simply put, our dataset combines scores from Open Targets for target-disease evidence and a select subset of target prioritisation \cite{OT23.12release} fields with almost no modifications, other than to add target and disease specific indicators of maximum trial phases reached and two extra genetic association features.
+The features used throughout this study consist of 27 target-disease pair predictors, 5 target-specific predictors and 1 disease-specific predictor. These are listed in Table~\ref{tab:features}. The target and disease specific features are chosen carefully such that they are either capable of being associated with years in which events supporting them occurred or result from large-scale, unbiased methods that do not favor well-studied or drugged targets/diseases. Examples of this include target-specific tissue expression specificity scores computed from Human Protein Atlas \cite{PMID:25613900} and LOEUF \cite{PMID:32461654} scores from gnomAD. Simply put, our dataset combines scores from Open Targets for target-disease evidence and a select subset of target prioritisation \cite{OT23.12release} fields with almost no modifications, other than to add target and disease specific indicators of maximum trial phases reached and two extra genetic association features (described in Section~\ref{sec:methods}).
+
+\begin{figure}[!htb]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \captionsetup[subfigure]{labelformat=empty}
+  \subfloat[\centering]{
+    \begin{overpic}[width=.9\textwidth]{feature_presence_unscaled.pdf}
+      \put(102, 20) {(a)}
+    \end{overpic}
+  }
+  \qquad
+  \subfloat[\centering]{
+    \begin{overpic}[width=.9\textwidth]{feature_presence_scaled.pdf}
+      \put(102, 20) {(b)}
+    \end{overpic}
+  }
+  \caption{
+    \textbf{Evaluation dataset feature presence}.
+    (a) Presence and co-occurrence of various feature groupings or individual features indicated by overlapping sets of TD pairs, where the size of each bar is proportional to the number of TD pairs with a given combination of features and the sort ordering is determined by the number of TD pairs associated with any one feature (show in the right margin). The top margin shows the number of overlapping features for a combination of features and the bottom margin shows the number of TD pairs that are a part of that same combination.
+    (b) Same as (a) without truly proportional bar sizes that are not scaled down beyond a limit necessary to fit all margin labels and combinatorial groupings. Features that are not specific to TD pairs are also omitted for brevity, along with the outcome feature used in this study and denoted here with the label "pair has advanced beyond phase 2".
+  }
+  \label{fig:feature_presence}
+\end{figure}
+
+The combination of target, disease and target-disease features creates sparsity patterns that are important to understand before interpreting models built from it. Figure~\ref{fig:feature_presence} demonstrates this sparsity by showing that of all the TD pairs entering phase 2 trials for the first time between 2016 and 2022 in our evaluation dataset (N=9010), less than 2\% of them ever have evidence directly linking them other than literature co-mentions, which exist for 21\% of those pairs. These TD pairs do, however, very frequently have prior clinical evidence for their associated targets and diseases. Specifically, 8,425 (94\%) have a target and 6,855 (76\%) have a disease that had already been in phase 2 or later trials previously. This is consistent with herding effects observed in recent drug development pipelines \cite{PMID:37117303} over the same time period (2016-2022) and underscores the prognostic value such information may have as it is becoming more and more common and clearly confers lower clinical risk for new drug programs. We also observe that, on top of the clear theoretical, causal relationship between prior target and disease human clinical validation and the likely success of programs for new combinations of such targets and diseases, these features have strong, univariate predictive effects in the evaluation dataset of our study. This is illustrated in Supplementary~Figure~\ref{fig:relative_risk_static_features}, which shows the relative risk of advancement for these features capturing the highest clinical stage previously reached by a target or disease.
+
+Taken together, the paucity of TD pair evidence and the abundance of prior target or disease clinical validation should be considered carefully when interpreting predictive performance. TD pairs predicted to be highly likely to advance clinically despite a lack of target-disease-specific evidence are entirely plausible, but the value of such a prediction is dependent upon the application. We choose to minimize the influence of these cases in our study by focusing on rankings within therapeutic areas that do not extend beyond the number of TD pairs with direct evidence of some kind, as discussed in Section~\ref{sec:methods}. This choice is also reflected in our primary performance metrics, as discussed in Section~\ref{sec:metrics}.
 
 \subsection{Models}
 \label{sec:models}
@@ -117,11 +145,11 @@ and RR metrics reported for univariate methods based on Open Targets scores for 
   \frac{P(advancement | score > 0)}{P(advancement | score = 0)}.
 \end{equation}
 
-The use of such a metric is essential for properly assessing performance in this forecasting problem. While we also report more common measures of classifier performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), neither of these adequately capture behavior in the upper extremes of rankings due the sparsity with which TD pair evidence is present for pairs that have ever entered phase 2 trials. This sparsity is further exacerbated in this study by the constraint that most of that evidence must have existed \textit{before} such trials began. Figure~\ref{fig:feature_presence} demonstrates this sparsity by showing that of all the TD pairs entering phase 2 trials for the first time between 2016 and 2022 in our evaluation dataset (N=9010), less than 2\% of them ever have evidence directly linking them other than literature co-mentions, which exist for 21\% of those pairs. These TD pairs do, however, very frequently have prior clinical evidence for their associated targets and diseases. Specifically, 8,425 (93.5\%) have a target and 6,855 (76.1\%) have a disease that had already been in phase 2 or later trials previously. Figure~\ref{fig:feature_presence} also demonstrates that a substantial fraction of these pairs that ultimately advance beyond phase 2 trials either have no direct evidence or have only prior clinical evidence for the target or disease alone, which means a comprehensive measure of classifier performance (e.g. ROC) is far more likely to reflect the extent to which disease-only historical, clinical information or target-only information -- including other attributes like conservation, essentiality and tissue expression -- can predict clinical success. Again, this is not our primary focus as we want to evaluate the maximum achievable performance in this forecasting problem, and we assert that this is best accomplished when one or more lines of target-disease-specific evidence are present.
+The use of such a metric is essential for properly assessing performance in this forecasting problem. While we also report more common measures of classifier performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), neither of these adequately capture behavior in the upper extremes of rankings due the sparsity with which TD pair evidence is present for pairs that have ever entered phase 2 trials. This sparsity is further exacerbated in this study by the constraint that most of that evidence must have existed \textit{before} such trials began. For more details on the extent of this sparsity, see Section~\ref{sec:features}. The figure presented there, Figure~\ref{fig:feature_presence}, also demonstrates that a substantial fraction (78\%) of TD pairs that ultimately advance beyond phase 2 trials have targets and/or diseases with prior clinical validation despite no direct evidence linking the pairs themselves, which means a comprehensive measure of classifier performance (e.g. ROC) is far more likely to reflect the extent to which disease-only historical, clinical information or target-only information -- including other attributes like conservation, essentiality and tissue expression -- can predict clinical success. Again, this is not our primary focus as we want to evaluate the maximum achievable performance in this forecasting problem, and we assert that this is best accomplished when one or more lines of target-disease-specific evidence are present.
 
 Reasonable alternative choices for this primary metric include those more common in information extraction literature or other machine learning studies with a focus on ranking rather than classification, such as mean reciprocal rank (MRR), precision at $k$ (P@k) and normalized discounted cumulative gain (NDCG) \cite{hoyt2022unified,moffat2022batch}. Precision at $k$ is the most similar among these to relative risk at $k$ since it is equivalent to the numerator in the relative risk calculation. We use relative risk instead because it is more intuitive than most ranking metrics, has well established analytical solutions for confidence intervals \cite{Katz1978-mo} and is consistent with prior work in this field.
 
-Lastly, we emphasize that the interpretation of "risk" for the relative risk metric is to be inverted in this context. A higher "risk" in this study actually corresponds to a greater probability of success. The name "Relative Success" is used for this metric instead in \cite{Minikel2023.06.23.23291765} even though it has the same underlying definition. We choose not to use this label because we also present generic performance measures like ROC and AP, thereby prioritizing consistency with a domain-independent nomenclature where possible.
+Lastly, we emphasize that the interpretation of "risk" for the relative risk metric is to be inverted in this context. A higher "risk" in this study actually corresponds to a greater probability of success. The name "Relative Success" is used for this metric instead in \cite{Minikel2023.06.23.23291765} even though it has the same underlying definition. We choose not to use this label because we also present generic performance measures like ROC and AP, thereby prioritizing consistency with a domain-independent nomenclature.
 
 \subsection{Performance}
 \label{sec:results_performance}
@@ -296,6 +324,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \begin{itemize}
   \item Cover limitations with OT concerning temporalization for both evidence and drug approvals, and why only transitions from phase 2 are relevant for this work
   \item Discuss the possibility to do prospective evaluation with OT snapshots
+  \item Discuss the limitations of the tractability analysis and why they might not be tractable targets
   \item Discuss why we present metrics like AP and ROC at all, and what kinds of use cases might maximize for something like ROC instead
   \item Expand on how the inclusion of time greatly improves tail performance and mention that this is consistent with its nature as a necessary but not sufficient condition for success, and it is likely that much of the value it adds in the tail of lower rankings could be captured and enhanced if other early indicators for the many reasons trials fail \cite{Razuvayevskaya2023.02.07.23285407} were also included (see more on this in Section~\ref{sec:discussion})
   \item We are focusing on prioritizing among targets/indications with genetic support, rather than expanding this space to find opportunities with weaker support
@@ -311,6 +340,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
   \item Discuss why all target prioritisation data fields are not used due to the potential leakage they may impose (e.g. target families, GO annotations, etc.)
   \item Describe how therapeutic areas were selected based on having at least 100 TD pairs with target-disease-specific evidence of any kind and with explicit omissions: ("biological\_process", "pregnancy or perinatal disease", "injury, poisoning or other complication", "pregnancy or perinatal disease", "medical procedure", "infectious disease", "animal disease")
   \item RDG models are fit using the \colorbox{Gainsboro}{Ridge} implementation from scikit-learn and GBM models are fit using the LightGBM \cite{LightGBM} algorithm
+  \item Cite supervenn
   \item Training/evaluation results are limited by temporalization while the present-day predictions are not
   \item OMIM is defined as EVA associations with publications
   \item The "genetic\_association\_\_curated" field is a union of all genetic association sources other than "gene\_burden" and "ot\_genetics\_portal"
@@ -325,29 +355,6 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \subsection{Features}
 
 \input{assets/feature_table.tex}
-
-\begin{figure}[H]
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \captionsetup[subfigure]{labelformat=empty}
-  \subfloat[\centering]{
-    \begin{overpic}[width=.9\textwidth]{feature_presence_unscaled.pdf}
-      \put(102, 20) {(a)}
-    \end{overpic}
-  }
-  \qquad
-  \subfloat[\centering]{
-    \begin{overpic}[width=.9\textwidth]{feature_presence_scaled.pdf}
-      \put(102, 20) {(b)}
-    \end{overpic}
-  }
-  \caption{
-    \textbf{Evaluation dataset feature presence}.
-    (a) Feature presence drawn to scale. 
-    (b) Feature presence visually rescaled to fit labels and combinatorial patterns. 
-  }
-  \label{fig:feature_presence}
-\end{figure}
 
 \begin{figure}[!htb]
   \centering

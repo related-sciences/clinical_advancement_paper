@@ -994,7 +994,7 @@ def get_feature_presence(features: PandasDataFrame) -> PandasDataFrame:
         if entity == "target_disease":
             entity = "pair"
         if "phase_2" in group:
-            group = "phase 2+ trials"
+            group = "prior phase 2+ trials"
         elif group == "outcome":
             group = "advanced beyond phase 2"
         elif group == "no_data":
