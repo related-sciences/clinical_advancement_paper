@@ -349,7 +349,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 An important question, that remains difficult to answer, is how much target prioritization methods like the one explored in this study can improve the efficiency of drug discovery. One 2018 estimate suggests that improving success rates from phase 1 to approval by 1.4x (from 9.6\% to 13.8\%) would reduce the median R\&D cost for a \textbf{single drug} by \$480 million USD \cite{PMID:32125404}. If a 2x increase in success rates from phase 1 to approval could be expected when pursuing only genetically validated TD pairs \cite{Nelson2015-eg}, then this would increase to a \$686 million cost savings per drug. Pushing that even further to 3x or 4x increase by incorporating more lines evidence, as we have done here, would suggest a per-drug cost savings of \$1.03 billion and \$1.37 billion, respectively. These savings would only be realized for drugs tested against targets and diseases with sufficient supporting evidence, however, we show in Section~\ref{sec:results_opportunities} there are more than 8,000 such opportunities (i.e. untested, present-day TD pairs) where at least a 3x improvement in success rates could be expected.
 
 % TODO: complete this section?
-Another way to quantify the impact that employing superior target prioritization strategies could have is to consider what would happen if this was done across the entire pharmaceutical development industry. Our internal research shows that \$130B (92\%) of global pharma R\&D costs (\$150B) are expended on failed assets each year. This assumes an 8\% success rate that if improved by 3x to 24\%, would lead to a total cost savings of approximately \$22B annually ...
+Another way to quantify the impact that employing superior target prioritization strategies could have is to consider what would happen if this was done across the entire pharmaceutical development industry. Our internal research shows that \$130B (92\%) of global pharma R\&D costs (\$150B) are expended on failed assets each year. This assumes an 8\% success rate that if improved by 3x to 24\%, would lead to a total cost savings of approximately \$22B annually ... (WIP)
 
 Throughout the majority of this study, we focus primarily on performance among the top \topRankingPct\% of TD pairs. Reasons for this are introduced in Section~\ref{sec:features} and Section~\ref{sec:metrics}. It is constructive to expand on this choice by comparing it to alternatives, and noting that it is quite likely that many other predictors could improve performance for the remaining \bottomRankingPct\%. We offer some evidence of this through the use of a feature indicating how long a TD pair has been in phase 2 trials, which improves wholistic measures of ranking performance like ROC by 12 points (see Figure~\ref{fig:performance_metric_mean_across_ta}). While time is a necessary but not sufficient condition for clinical advancement of a TD pair, given that a single trial can take years to complete, it also correlates with how many distinct trials, drugs, companies, sponsors, investigators, etc. attempt to validate any one pair. We posit that this is crucial because even if a druggable, mechanistic link exists between a target and a disease, many (or even most) trials testing that link will fail for reasons unrelated to efficacy or safety of a drug \cite{Razuvayevskaya2023.02.07.23285407}. Some of these reasons include 1) commercial factors like a lack of funding, pipeline reprioritization and competitive density, 2) administrative or logistical factors like a lack of enrollment, retention problems, poor trial design, drug supply chain shortages, epidemics (COVID-19) and 3) regulatory factors like legislative shifts or extensive regulatory approval delays. Many of these factors are fundamentally difficult or impossible to predict. Epidemic outbreaks, labor shortages leading to supply chain problems and regulatory shifts are examples of exogenous shocks for which accurate predictors are unlikely to exist. However, factors like funding, competition, enrollment and certain aspects of trial design have measurable predictors such as preceding venture capital and private equity investments, patent filings and revenue for related drugs, disease severity and prevalence, and the existence of biomarkers or other enabling factors for better trial designs (respectively). As a more detailed example, patient recruitment failures are the most common reason trials fail \cite{Razuvayevskaya2023.02.07.23285407} and recruitment statistics are highly predictive of eventual trial outcomes \cite{Lo2019Machine,PMID:34430930}. It stands to reason then that predicting trial enrollment failures well in advance of when a trial is even conceived, i.e. for a target-disease pair, should be possible because recruitment in trials is determined, in part, by how prevalent a disease is, how debilitating it is, what patient demographics it inflicts, whether existing treatments exist for it and how successful recruitment for past trials (if any exist) has been -- all of which are measurable. Signals like this could be used to further improve performance in the bottom \bottomRankingPct\% of TD pairs since they better capture causal factors in non-biological trial failures that time under development -- the only non-biological feature in this study -- does not.
 
@@ -381,13 +381,11 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \item RDG is always trained on all features, but only applied to feature subsets where relevant
 \end{itemize} 
 
+\pagebreak
+
 \section{Appendix}
 
-\subsection{Features}
-
-\input{assets/feature_table.tex}
-
-\begin{figure}[!htb]
+\begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{dataset_statistics.png}
@@ -397,10 +395,15 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:dataset_statistics}
 \end{figure}
 
+\pagebreak
+
+\input{assets/feature_table.tex}
+
+\clearpage
 
 \section{Supplementary Material}
 
-\subsection{Performance}
+\pagebreak
 
 \begin{figure}[H]
   \centering
@@ -413,6 +416,8 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:relative_risk_core_features}
 \end{figure}
 
+\pagebreak
+
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
@@ -423,6 +428,8 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   }
   \label{fig:relative_risk_static_features}
 \end{figure}
+
+\pagebreak
 
 \begin{figure}[H]
   \centering
@@ -435,6 +442,8 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:relative_risk_by_ta}
 \end{figure}
   
+\pagebreak
+
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
@@ -446,6 +455,8 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:relative_risk_dist_across_ta}
 \end{figure}
 
+\pagebreak
+
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
@@ -456,8 +467,7 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:relative_risk_model_features}
 \end{figure}
 
-
-\subsection{Predictions}
+\pagebreak
 
 \begin{figure}[H]
   \centering
@@ -471,9 +481,11 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
 \end{figure}
 
 
-\subsection{Opportunities}
+\pagebreak
 
 \input{assets/tractability_bucket_table.tex}
+
+\clearpage
 
 \begin{figure}[H]
   \centering
@@ -485,6 +497,7 @@ Another notable focus of this study is on evidence for TD pairs that can be \tex
   \label{fig:top_opportunity_predictions}
 \end{figure}
 
+\pagebreak
 
 \subsection{Sensitivity}
 
@@ -493,6 +506,8 @@ In order to validate the stability of our findings in Section~\ref{sec:results_p
 We find that the mean RR values from the RDG model consistently exceed the OTS model in all configurations among the very highest rankings (N=10) and also exceed the OTS model in all configurations except for 1 for N between 20 and 60. This data is shown in Supplementary~Figure~\ref{fig:sensitivity_relative_risk}. The significance of these differences drops notably after N=40, which can be seen in the distribution of p-values from a Wilcoxon signed-rank test shown in Supplementary~Figure~\ref{fig:sensitivity_p_values}.
 
 \input{assets/sensitivity_configurations.tex}
+
+\clearpage
 
 \begin{figure}[H]
   \centering
@@ -505,6 +520,8 @@ We find that the mean RR values from the RDG model consistently exceed the OTS m
   \label{fig:sensitivity_relative_risk}
 \end{figure}
 
+\pagebreak
+
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
@@ -516,6 +533,7 @@ We find that the mean RR values from the RDG model consistently exceed the OTS m
   \label{fig:sensitivity_p_values}
 \end{figure}
 
+\pagebreak
 
 \bibliographystyle{unsrt}  
 \bibliography{references} 
