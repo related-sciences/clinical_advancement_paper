@@ -407,7 +407,13 @@ There are a number of limitations and caveats with this study. These include:
   \captionsetup{width=.9\linewidth}
   \includegraphics[width=1\textwidth]{dataset_statistics.png}
   \caption{
-    \textbf{Training and evaluation dataset summary statistics}.
+    \textbf{Training and evaluation dataset summary statistics}.\\\hspace{\textwidth}
+    \textbf{balance}: percentage of TD pairs that eventually advanced beyond phase 2 \\\hspace{\textwidth} 
+    \textbf{min\_year}: earliest year in which a TD pair has first advanced to phase 2 \\\hspace{\textwidth} 
+    \textbf{n\_targets}: number of unique targets \\\hspace{\textwidth} 
+    \textbf{n\_diseases}: number of unique diseases \\\hspace{\textwidth} 
+    \textbf{n\_pairs}: number of TD pairs (equal to number of records) \\\hspace{\textwidth} 
+    \textbf{n\_pairs\_wev}: number of TD pairs with directly associated evidence (i.e. not just target or disease evidence).
   }
   \label{fig:dataset_statistics}
 \end{figure}
@@ -470,18 +476,6 @@ There are a number of limitations and caveats with this study. These include:
     P-values are computed from a one-sided Wilcoxon signed-rank test with the alternative that the RDG model RR averages across therapeutic areas exceed OTS averages.
   }
   \label{fig:relative_risk_dist_across_ta}
-\end{figure}
-
-\pagebreak
-
-\begin{figure}[H]
-  \centering
-  \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_model_features.pdf}
-  \caption{
-    \textbf{Performance by algorithm, constraint type and feature grouping}.  
-  }
-  \label{fig:relative_risk_model_features}
 \end{figure}
 
 \pagebreak

@@ -2932,6 +2932,102 @@ def prepare_average_therapeutic_area_metrics(
     # fmt: on
 
 
+def prepare_opportunity_funnel(
+    opportunity_statistics: PandasDataFrame, color_fn: Callable[[str, float], str]
+) -> PandasDataFrame:
+    def _get_level_colors(levels: list[str]) -> dict[str, str]:
+        result = {}
+        for level in levels:
+            value = int(level.split(":")[1]) / 5.0
+            if "tractability" in level:
+                color = color_fn("Blues", value)
+            elif "development" in level:
+                color = color_fn("Reds", value)
+            else:
+                color = color_fn("Greens", value)
+            result[level] = color
+        return result
+
+    # fmt: off
+    df = (
+        opportunity_statistics
+        .pipe(lambda df: df[df["disease__therapeutic_area"] == "ALL"])
+        .pipe(lambda df: df[df["target__tractability__evidence"].isin(["ALL", "LOW", "MED", "HIGH"])])
+        .assign(benchmark=lambda df: df["benchmark_slug"])
+    )
+
+    facets = {
+        "stage": "current\ndevelopment\nstatus",
+        "threshold": "clinical\nadvancement\nprobability",
+        "tractability": "tractability by\nmodality",
+    }
+
+    stage_data = (
+        df
+        .pipe(lambda df: df[df["target__tractability__evidence"] == "ALL"])
+        .pipe(lambda df: df[df["target__tractability__modality"] == "ALL"])
+        .pipe(lambda df: df[df["target_disease__stage"] != "ALL"])
+        .pipe(lambda df: df[df["benchmark"] == "OTG"])
+        .pipe(assert_condition, lambda df: not df["target_disease__stage"].duplicated().any())
+        .assign(size=lambda df: df["model__n_pairs__over_threshold"].pipe(lambda s: s / s.sum()))
+        .assign(label=lambda df: df["target_disease__stage"])
+        .assign(level=lambda df: df["target_disease__stage"].map({
+            "NONE": 0, "Phase 1": 1, "Phase 2": 2, "Phase 3": 3, "Phase 4": 4,
+        }))
+        .assign(tick="stage")
+        .assign(facet=facets["stage"])
+    )
+    threshold_data = (
+        df
+        .pipe(lambda df: df[df["target__tractability__evidence"] == "ALL"])
+        .pipe(lambda df: df[df["target__tractability__modality"] == "ALL"])
+        .pipe(lambda df: df[df["target_disease__stage"] == "NONE"])
+        .pipe(assert_condition, lambda df: not df["benchmark"].duplicated().any())
+        .assign(size=lambda df: df["model__n_pairs__over_threshold"].pipe(lambda s: s / s.sum()))
+        .assign(label=lambda df: df["benchmark"])
+        .assign(level=lambda df: df["benchmark"].map({
+            "OTG": 0, "EVA": 1, "OMIM": 2
+        }))
+        .assign(tick="threshold")
+        .assign(facet=facets["threshold"])
+    )
+    tractability_data = (
+        df
+        .pipe(lambda df: df[df["target__tractability__evidence"].isin(["LOW", "MED", "HIGH"])])
+        .pipe(lambda df: df[df["target__tractability__modality"] != "ALL"])
+        .pipe(lambda df: df[df["benchmark"] == "EVA"])
+        .pipe(lambda df: df[df["target_disease__stage"] == "NONE"])
+        .pipe(assert_condition, lambda df: not df[["target__tractability__modality", "target__tractability__evidence"]].duplicated().any().any())
+        .assign(size=lambda df: df.groupby("target__tractability__modality")["model__n_pairs__over_threshold"].transform(lambda s: s / s.sum()))
+        .assign(label=lambda df: df["target__tractability__evidence"])
+        .assign(level=lambda df: df["target__tractability__evidence"].map({
+            "LOW": 0, "MED": 1, "HIGH": 2
+        }))
+        .assign(tick=lambda df: df["target__tractability__modality"])
+        .assign(facet=facets["tractability"])
+    )
+
+    return (
+        pd.concat([stage_data, threshold_data, tractability_data], axis=0, ignore_index=True)
+        .assign(facet=lambda df: pd.Categorical(
+            df["facet"], ordered=True,
+            categories=list(facets.values())
+        ))
+        .assign(label=lambda df: np.where(
+            (df["facet"] != facets["stage"]) | (df["model__n_pairs__over_threshold"] > 750),
+            df["label"] + "\n(N=" + df["model__n_pairs__over_threshold"].astype(str) + ")",
+            ""
+        ))
+        .assign(level=lambda df: df["facet"].astype(str) + ":" + df["level"].astype(str))
+        .assign(level_color=lambda df: df["level"].map(_get_level_colors(df["level"].drop_duplicates().to_list())))
+        .assign(level=lambda df: pd.Categorical(
+            df["level"], ordered=True, 
+            categories=df["level"].drop_duplicates().sort_values(ascending=False)
+        ))
+    )
+    # fmt: on
+
+
 ###############################################################################
 # Utils
 ###############################################################################
