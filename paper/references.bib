@@ -80,6 +80,36 @@
   language = "en"
 }
 
+@article {PMID:20200009,
+	Title = {Modeling sample variables with an Experimental Factor Ontology},
+	Author = {Malone, James and Holloway, Ele and Adamusiak, Tomasz and Kapushesky, Misha and Zheng, Jie and Kolesnikov, Nikolay and Zhukova, Anna and Brazma, Alvis and Parkinson, Helen},
+	DOI = {10.1093/bioinformatics/btq099},
+	Number = {8},
+	Volume = {26},
+	Month = {April},
+	Year = {2010},
+	Journal = {Bioinformatics (Oxford, England)},
+	ISSN = {1367-4803},
+	Pages = {1112—1118},
+	Abstract = {&lt;h4&gt;Motivation&lt;/h4&gt;Describing biological sample variables with ontologies is complex due to the cross-domain nature of experiments. Ontologies provide annotation solutions; however, for cross-domain investigations, multiple ontologies are needed to represent the data. These are subject to rapid change, are often not interoperable and present complexities that are a barrier to biological resource users.&lt;h4&gt;Results&lt;/h4&gt;We present the Experimental Factor Ontology, designed to meet cross-domain, application focused use cases for gene expression data. We describe our methodology and open source tools used to create the ontology. These include tools for creating ontology mappings, ontology views, detecting ontology changes and using ontologies in interfaces to enhance querying. The application of reference ontologies to data is a key problem, and this work presents guidelines on how community ontologies can be presented in an application ontology in a data-driven way.&lt;h4&gt;Availability&lt;/h4&gt;http://www.ebi.ac.uk/efo.},
+	URL = {https://europepmc.org/articles/PMC2853691},
+}
+
+@article {PMID:33231642,
+	Title = {Mouse Genome Database (MGD): Knowledgebase for mouse-human comparative biology},
+	Author = {Blake, Judith A and Baldarelli, Richard and Kadin, James A and Richardson, Joel E and Smith, Cynthia L and Bult, Carol J and {Mouse Genome Database Group}},
+	DOI = {10.1093/nar/gkaa1083},
+	Number = {D1},
+	Volume = {49},
+	Month = {January},
+	Year = {2021},
+	Journal = {Nucleic acids research},
+	ISSN = {0305-1048},
+	Pages = {D981—D987},
+	Abstract = {The Mouse Genome Database (MGD; http://www.informatics.jax.org) is the community model organism knowledgebase for the laboratory mouse, a widely used animal model for comparative studies of the genetic and genomic basis for human health and disease. MGD is the authoritative source for biological reference data related to mouse genes, gene functions, phenotypes and mouse models of human disease. MGD is the primary source for official gene, allele, and mouse strain nomenclature based on the guidelines set by the International Committee on Standardized Nomenclature for Mice. MGD's biocuration scientists curate information from the biomedical literature and from large and small datasets contributed directly by investigators. In this report we describe significant enhancements to the content and interfaces at MGD, including (i) improvements in the Multi Genome Viewer for exploring the genomes of multiple mouse strains, (ii) inclusion of many more mouse strains and new mouse strain pages with extended query options and (iii) integration of extensive data about mouse strain variants. We also describe improvements to the efficiency of literature curation processes and the implementation of an information portal focused on mouse models and genes for the study of COVID-19.},
+	URL = {https://europepmc.org/articles/PMC7779030},
+}
+
 @article {PMID:34718739,
 	Title = {The European Variation Archive: a FAIR resource of genomic variation for all species},
 	Author = {Cezard, Timothe and Cunningham, Fiona and Hunt, Sarah E and Koylass, Baron and Kumar, Nitin and Saunders, Gary and Shen, April and Silva, Andres F and Tsukanov, Kirill and Venkataraman, Sundararaman and Flicek, Paul and Parkinson, Helen and Keane, Thomas M},
@@ -93,6 +123,19 @@
 	Pages = {D1216—D1220},
 	Abstract = {The European Variation Archive (EVA; https://www.ebi.ac.uk/eva/) is a resource for sharing all types of genetic variation data (SNPs, indels, and structural variants) for all species. The EVA was created in 2014 to provide FAIR access to genetic variation data and has since grown to be a primary resource for genomic variants hosting &gt;3 billion records. The EVA and dbSNP have established a compatible global system to assign unique identifiers to all submitted genetic variants. The EVA is active within the Global Alliance of Genomics and Health (GA4GH), maintaining, contributing and implementing standards such as VCF, Refget and Variant Representation Specification (VRS). In this article, we describe the submission and permanent accessioning services along with the different ways the data can be retrieved by the scientific community.},
 	URL = {https://europepmc.org/articles/PMC8728205},
+}
+
+@article {PMID:33763309,
+	Title = {pmparser and PMDB: resources for large-scale, open studies of the biomedical literature},
+	Author = {Schoenbachler, Joshua L and Hughey, Jacob J},
+	DOI = {10.7717/peerj.11071},
+	Volume = {9},
+	Year = {2021},
+	Journal = {PeerJ},
+	ISSN = {2167-8359},
+	Pages = {e11071},
+	Abstract = {PubMed is an invaluable resource for the biomedical community. Although PubMed is freely available, the existing API is not designed for large-scale analyses and the XML structure of the underlying data is inconvenient for complex queries. We developed an R package called pmparser to convert the data in PubMed to a relational database. Our implementation of the database, called PMDB, currently contains data on over 31 million PubMed Identifiers (PMIDs) and is updated regularly. Together, pmparser and PMDB can enable large-scale, reproducible, and transparent analyses of the biomedical literature. pmparser is licensed under GPL-2 and available at https://pmparser.hugheylab.org. PMDB is available in both PostgreSQL (DOI 10.5281/zenodo.4008109) and Google BigQuery (https://console.cloud.google.com/bigquery?project=pmdb-bq&amp;d=pmdb).},
+	URL = {https://europepmc.org/articles/PMC7955988},
 }
 
 
@@ -898,19 +941,36 @@
 }
 
 
-@misc{OT23.12release, 
+@misc{OTtargetPrioritisation, 
 	title={Open targets platform 23.12 has been released!},
 	howpublished={\url{https://blog.opentargets.org/open-targets-platform-23-12-release/#target-prioritisation}}, 
 	publisher={Open Targets}, 
 	year={2023}, 
-	month={Nov}
+	note = {[Accessed 11-04-2024]},
 } 
+
+@misc{OTdirectVsIndirect,
+	title = {{D}irect and indirect evidence in {O}pen {T}argets to expand associations.},
+	howpublished = {\url{https://blog.opentargets.org/direct-versus-indirect-evidence-should-you-care/}},
+	publisher={Open Targets}, 
+	year = {2017},
+	note = {[Accessed 11-04-2024]},
+}
+
+@misc{OTscoring,
+	title = {{T}arget - disease associations | {O}pen {T}argets {P}latform {D}ocumentation},
+	howpublished = {\url{https://platform-docs.opentargets.org/associations#overall}},
+	publisher={Open Targets}, 
+	year = {2024},
+	note = {[Accessed 11-04-2024]},
+}
 
 @misc{OTweights,
 	title = {{T}arget - disease associations | {O}pen {T}argets {P}latform {D}ocumentation},
 	publisher={Open Targets}, 
 	howpublished = {\url{https://platform-docs.opentargets.org/associations#data-source-weights}},
-	year = {2023}
+	year = {2023},
+	note = {[Accessed 11-04-2024]},
 }
 
 @misc{OTTractability, 
