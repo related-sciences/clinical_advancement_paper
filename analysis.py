@@ -2025,6 +2025,14 @@ TRACTABILITY_BUCKETS = {
     },
 }
 
+TRACTABILITY_MODALITY_LABELS = {
+    # See https://github.com/chembl/tractability_pipeline_v2
+    "PR": "PROTAC",
+    "SM": "Small molecule",
+    "AB": "Antibody",
+    "OC": "Other",
+}
+
 
 def get_tractability_buckets(tractability: SparkDataFrame) -> PandasDataFrame:
     return (
@@ -2208,28 +2216,43 @@ def get_opportunity_statistics(
         .agg(
             F.count_distinct(F.col("pair")).alias("n_pairs"),
             F.array(
-                *[
-                    F.struct(
-                        F.lit(row.benchmark_name).alias("benchmark_name"),
-                        F.lit(row.benchmark_slug).alias("benchmark_slug"),
-                        F.count_distinct(
-                            F.when(
-                                F.col("prediction") >= row.model_prediction_threshold,
-                                F.col("pair"),
-                            )
-                        ).alias("model__n_pairs__over_threshold"),
-                        F.count_distinct(
-                            F.when(
-                                F.col(
-                                    f"target_disease__genetic_association__{row.benchmark_name}"
+                *(
+                    [
+                        F.struct(
+                            F.lit(row.benchmark_name).alias("benchmark_name"),
+                            F.lit(row.benchmark_slug).alias("benchmark_slug"),
+                            F.count_distinct(
+                                F.when(
+                                    F.col("prediction")
+                                    >= row.model_prediction_threshold,
+                                    F.col("pair"),
                                 )
-                                > 0,
-                                F.col("pair"),
-                            )
-                        ).alias("feature__n_pairs__exists"),
-                    )
-                    for row in (relative_risk_thresholds.itertuples())
-                ]
+                            ).alias("model__n_pairs__over_threshold"),
+                            F.count_distinct(
+                                F.when(
+                                    F.col(
+                                        f"target_disease__genetic_association__{row.benchmark_name}"
+                                    )
+                                    > 0,
+                                    F.col("pair"),
+                                )
+                            ).alias("feature__n_pairs__exists"),
+                        )
+                        for row in (relative_risk_thresholds.itertuples())
+                    ]
+                    + [
+                        F.struct(
+                            F.lit("NONE").alias("benchmark_name"),
+                            F.lit("NONE").alias("benchmark_slug"),
+                            F.count_distinct(F.col("pair")).alias(
+                                "model__n_pairs__over_threshold"
+                            ),
+                            F.count_distinct(F.col("pair")).alias(
+                                "feature__n_pairs__exists"
+                            ),
+                        )
+                    ]
+                )
             ).alias("stats"),
         )
         .select(
@@ -2349,6 +2372,7 @@ def display_opportunities_by_category(
     # fmt: off
     return (
         opportunity_statistics
+        .pipe(lambda df: df[df["benchmark_name"] != "NONE"])
         .assign(categories=lambda df: df.apply(_categories, axis=1))
         .explode("categories")
         .dropna(subset="categories")
@@ -2933,15 +2957,19 @@ def prepare_average_therapeutic_area_metrics(
 
 
 def prepare_opportunity_funnel(
-    opportunity_statistics: PandasDataFrame, color_fn: Callable[[str, float], str]
+    opportunity_statistics: PandasDataFrame,
+    relative_risk_thresholds: PandasDataFrame,
+    color_fn: Callable[[str, float], str],
 ) -> PandasDataFrame:
+    assert relative_risk_thresholds["model"].nunique() == 1
+
     def _get_level_colors(levels: list[str]) -> dict[str, str]:
         result = {}
         for level in levels:
             value = int(level.split(":")[1]) / 5.0
-            if "tractability" in level:
+            if "tractability" in level.lower():
                 color = color_fn("Blues", value)
-            elif "development" in level:
+            elif "development" in level.lower():
                 color = color_fn("Reds", value)
             else:
                 color = color_fn("Greens", value)
@@ -2954,12 +2982,15 @@ def prepare_opportunity_funnel(
         .pipe(lambda df: df[df["disease__therapeutic_area"] == "ALL"])
         .pipe(lambda df: df[df["target__tractability__evidence"].isin(["ALL", "LOW", "MED", "HIGH"])])
         .assign(benchmark=lambda df: df["benchmark_slug"])
+        .assign(benchmark_relative_risk=lambda df: df["benchmark_slug"].map(
+            relative_risk_thresholds.set_index("benchmark_slug")["benchmark_relative_risk"]
+        ))
     )
 
     facets = {
-        "stage": "current\ndevelopment\nstatus",
-        "threshold": "clinical\nadvancement\nprobability",
-        "tractability": "tractability by\nmodality",
+        "stage": "Present-day\ndevelopment\nstatus",
+        "threshold": "Clinical\nadvancement\nconfidence",
+        "tractability": "Tractability\nconfidence\nby modality",
     }
 
     stage_data = (
@@ -2967,14 +2998,16 @@ def prepare_opportunity_funnel(
         .pipe(lambda df: df[df["target__tractability__evidence"] == "ALL"])
         .pipe(lambda df: df[df["target__tractability__modality"] == "ALL"])
         .pipe(lambda df: df[df["target_disease__stage"] != "ALL"])
-        .pipe(lambda df: df[df["benchmark"] == "OTG"])
+        .pipe(lambda df: df[df["benchmark_slug"] == "NONE"])
         .pipe(assert_condition, lambda df: not df["target_disease__stage"].duplicated().any())
         .assign(size=lambda df: df["model__n_pairs__over_threshold"].pipe(lambda s: s / s.sum()))
-        .assign(label=lambda df: df["target_disease__stage"])
+        .assign(label=lambda df: df["target_disease__stage"].map({"NONE": "Undeveloped"}).fillna(df["target_disease__stage"]))
+        .pipe(assert_condition, lambda df: df["label"].notnull().all())
         .assign(level=lambda df: df["target_disease__stage"].map({
             "NONE": 0, "Phase 1": 1, "Phase 2": 2, "Phase 3": 3, "Phase 4": 4,
         }))
-        .assign(tick="stage")
+        .pipe(assert_condition, lambda df: df["level"].notnull().all())
+        .assign(tick="Stage")
         .assign(facet=facets["stage"])
     )
     threshold_data = (
@@ -2982,28 +3015,40 @@ def prepare_opportunity_funnel(
         .pipe(lambda df: df[df["target__tractability__evidence"] == "ALL"])
         .pipe(lambda df: df[df["target__tractability__modality"] == "ALL"])
         .pipe(lambda df: df[df["target_disease__stage"] == "NONE"])
-        .pipe(assert_condition, lambda df: not df["benchmark"].duplicated().any())
+        .pipe(lambda df: df[df["benchmark_slug"] != "NONE"])
+        .pipe(assert_condition, lambda df: not df["benchmark_slug"].duplicated().any())
         .assign(size=lambda df: df["model__n_pairs__over_threshold"].pipe(lambda s: s / s.sum()))
-        .assign(label=lambda df: df["benchmark"])
-        .assign(level=lambda df: df["benchmark"].map({
+        .assign(label=lambda df: np.array([
+            {"OTG": "Medium", "EVA": "High", "OMIM": "Highest"}[r.benchmark_slug] 
+            + f"\nRR={r.benchmark_relative_risk:.2f}"
+            for r in df.itertuples()
+        ]))
+        .pipe(assert_condition, lambda df: df["label"].notnull().all())
+        .assign(level=lambda df: df["benchmark_slug"].map({
             "OTG": 0, "EVA": 1, "OMIM": 2
         }))
-        .assign(tick="threshold")
+        .pipe(assert_condition, lambda df: df["level"].notnull().all())
+        .assign(tick="Threshold")
         .assign(facet=facets["threshold"])
     )
     tractability_data = (
         df
         .pipe(lambda df: df[df["target__tractability__evidence"].isin(["LOW", "MED", "HIGH"])])
         .pipe(lambda df: df[df["target__tractability__modality"] != "ALL"])
-        .pipe(lambda df: df[df["benchmark"] == "EVA"])
+        .pipe(lambda df: df[df["benchmark_slug"] == "EVA"])
         .pipe(lambda df: df[df["target_disease__stage"] == "NONE"])
         .pipe(assert_condition, lambda df: not df[["target__tractability__modality", "target__tractability__evidence"]].duplicated().any().any())
         .assign(size=lambda df: df.groupby("target__tractability__modality")["model__n_pairs__over_threshold"].transform(lambda s: s / s.sum()))
-        .assign(label=lambda df: df["target__tractability__evidence"])
+        .assign(label=lambda df: df["target__tractability__evidence"].map({
+            "LOW": "Low", "MED": "Medium", "HIGH": "High"
+        }))
+        .pipe(assert_condition, lambda df: df["label"].notnull().all())
         .assign(level=lambda df: df["target__tractability__evidence"].map({
             "LOW": 0, "MED": 1, "HIGH": 2
         }))
-        .assign(tick=lambda df: df["target__tractability__modality"])
+        .pipe(assert_condition, lambda df: df["level"].notnull().all())
+        .assign(tick=lambda df: df["target__tractability__modality"].map(TRACTABILITY_MODALITY_LABELS))
+        .pipe(assert_condition, lambda df: df["tick"].notnull().all())
         .assign(facet=facets["tractability"])
     )
 
@@ -3013,9 +3058,15 @@ def prepare_opportunity_funnel(
             df["facet"], ordered=True,
             categories=list(facets.values())
         ))
+        .pipe(assert_condition, lambda df: df["facet"].notnull().all())
+        .assign(tick=lambda df: pd.Categorical(
+            df["tick"], ordered=True,
+            categories=["Stage", "Threshold"] + list(TRACTABILITY_MODALITY_LABELS.values())[::-1]
+        ))
+        .pipe(assert_condition, lambda df: df["tick"].notnull().all())
         .assign(label=lambda df: np.where(
-            (df["facet"] != facets["stage"]) | (df["model__n_pairs__over_threshold"] > 750),
-            df["label"] + "\n(N=" + df["model__n_pairs__over_threshold"].astype(str) + ")",
+            (df["facet"] != facets["stage"]) | (df["label"].isin(["Undeveloped", "Phase 2"])),
+            df["label"] + "\n(" + df["model__n_pairs__over_threshold"].astype(int).apply("{:,}".format) + ")",
             ""
         ))
         .assign(level=lambda df: df["facet"].astype(str) + ":" + df["level"].astype(str))
@@ -3024,6 +3075,7 @@ def prepare_opportunity_funnel(
             df["level"], ordered=True, 
             categories=df["level"].drop_duplicates().sort_values(ascending=False)
         ))
+        .pipe(assert_condition, lambda df: df["level"].notnull().all())
     )
     # fmt: on
 

@@ -175,14 +175,14 @@ Figure~\ref{fig:performance_across_ta} demonstrates how well our primary model i
       \put(10.5,28.5){\line(0,1){27.5}} % Vertical line
       \put(10.5,28.5){\line(1,0){.5}} % Bottom bar
       \put(10.5,56){\line(1,0){.5}} % Top bar
-      \put(6,42.5){2x}
+      \put(6,42.5){\sffamily \fontsize{8pt}{12pt}\selectfont 2x}
       \put(30.5,22.25){\line(0,1){6.5}}
-      \put(23,25){1.5x}
+      \put(23,25){\sffamily \fontsize{8pt}{12pt}\selectfont 1.5x}
       % Ranking percentages
       \put(19,9){\line(0,1){4}}
-      \put(16,14){Top 1\%}
+      \put(15,14){\sffamily \fontsize{8pt}{12pt}\selectfont Top 1\%}
       \put(36.5,9){\line(0,1){4}}
-      \put(33.5,14){Top 2\%}
+      \put(32.5,14){\sffamily \fontsize{8pt}{12pt}\selectfont Top 2\%}
     \end{overpic}
   }
   \qquad
@@ -218,9 +218,9 @@ One key objective of this study is to determine if any model, e.g. RDG, can sort
   \begin{overpic}[width=1\textwidth]{relative_risk_by_limit.pdf}
     % Ranking percentages
     \put(23,8){\line(0,1){2}}
-    \put(20,11){Top 1\%}
+    \put(20,11){\sffamily \fontsize{10pt}{12pt}\selectfont Top 1\%}
     \put(37,8){\line(0,1){2}}
-    \put(34,11){Top 2\%}
+    \put(34,11){\sffamily \fontsize{10pt}{12pt}\selectfont Top 2\%}
   \end{overpic}
   \caption{
     \textbf{Performance compared to genetic support benchmarks}. The RR estimates for each benchmark annotated on the right are shown as horizontal dotted lines and are calculated across all TD pairs (N=\evaluationDatasetPairCount). The number of pairs with support from each benchmark is represented by the bars extending horizontally (left to right) from the y-axis. RDG RR point estimates are shown in blue and bounds around the estimates correspond to Katz 90\% confidence intervals. Annotations on the x-axis indicate how many TD pairs comprise the top 1\% (N=90) and top 2\% (N=180) of rankings. All results shown are from the evaluation dataset.
@@ -290,6 +290,26 @@ It is worth noting that the discordance between the coefficients and the average
 \label{sec:results_opportunities}
 
 A common method for identifying druggable opportunities within a specific disease context involves first ranking TD pairs according to some prioritization methodology followed by filtering or re-prioritizing those ranks based on knowledge of target tractability \cite{PMID:28356508,PMID:35401535,PMID:31253980}. We use a similar approach to identify tractable targets associated with TD pairs that have yet to enter clinical trials. To aid in interpreting this approach, we also draw on the results of Figure~\ref{fig:relative_risk_by_limit}. The data in this figure suggests thresholds for the RDG model that align to expected rates of advancement compared to several genetic support benchmarks. These thresholds are used to bucket undeveloped TD pairs before further bucketing them based on levels of tractability. The tractability buckets in Supplementary~Table~\ref{tab:tractability_buckets} provide \colorbox{Gainsboro}{HIGH}, \colorbox{Gainsboro}{MED}, and \colorbox{Gainsboro}{LOW} confidence ratings for each type of tractability evidence based on the priorities suggested in \cite{OTTractability}.
+
+\begin{figure}[!htb]
+  \centering
+  \captionsetup{width=.9\linewidth}
+  \begin{overpic}[width=1\textwidth]{opportunity_funnel.pdf}
+    \put(100, 53) {(a)}
+    \put(100, 41) {(b)}
+    \put(100, 19) {(c)}
+    \put(50, 51){\color{black}\vector(0, -1){5}}
+    \put(74, 39){\color{black}\vector(0, -1){4.5}}
+    \put(13.5, 58){\sffamily \fontsize{8pt}{12pt}\selectfont Of 2.53M TD pairs with evidence linking them, 2.46M have never been in clinical trials.}
+    \put(13.5, 35.8){\sffamily \fontsize{8pt}{12pt}\selectfont Of 2.46M undeveloped pairs, the top 0.8\% are 2.07x+ more likely to advance.}
+    \put(13.5, 1.8){\sffamily \fontsize{8pt}{12pt}\selectfont Of 8,560 pairs 2.93x more likely to advance, 2,408 have clinical small molecule targets (e.g.).}
+  \end{overpic}
+  \caption{
+    \textbf{Present-day target-disease pair opportunity funnel}.
+    ... 
+  }
+  \label{fig:opportunity_funnel}
+\end{figure}
 
 \begin{figure}[!htb]
   \centering
