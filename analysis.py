@@ -27,6 +27,7 @@ from pyspark.sql import functions as F
 from pyspark_gcs import get_gcs_enabled_config
 from scipy.stats import wilcoxon
 from scipy.stats.contingency import relative_risk
+from scipy.stats import fisher_exact
 from sklearn.base import BaseEstimator
 from sklearn.compose import ColumnTransformer
 from sklearn.discriminant_analysis import StandardScaler
@@ -1413,6 +1414,91 @@ def get_relative_risk_by_therapuetic_area(
     return pd.concat(dfs, axis=0, ignore_index=True).pipe(
         assert_condition,
         lambda df: not df[["therapeutic_area_name", "method"]].duplicated().any(),
+    )
+
+
+###############################################################################
+# Inflation
+###############################################################################
+
+
+def get_feature_inflation_statistics(
+    advancement_statistics: PandasDataFrame,
+) -> PandasDataFrame:
+    def _get_relative_risk(
+        r: pd.Series, confidence_level: float = 0.99
+    ) -> dict[str, float]:
+        counts = dict(
+            exposed_pos=int(r[("after", "advanced")]),
+            exposed_neg=int(r[("before", "advanced")]),
+            control_pos=int(r[("after", "stalled")]),
+            control_neg=int(r[("before", "stalled")]),
+        )
+        n_exposed = counts["exposed_pos"] + counts["exposed_neg"]
+        n_control = counts["control_pos"] + counts["control_neg"]
+        if n_exposed == 0 or n_control == 0:
+            return dict()
+        return dict(
+            relative_risk_low=(
+                rr := relative_risk(
+                    counts["exposed_pos"],
+                    n_exposed,
+                    counts["control_pos"],
+                    n_control,
+                )
+            )
+            .confidence_interval(confidence_level=confidence_level)
+            .low,
+            relative_risk_high=rr.confidence_interval(
+                confidence_level=confidence_level
+            ).high,
+            relative_risk=rr.relative_risk,
+        )
+
+    return (
+        advancement_statistics.pipe(lambda df: df[df["progress"] != "none"])
+        .set_index(["feature_name", "emerged", "progress"])["n_pairs"]
+        .unstack(["emerged", "progress"])
+        .fillna(0)
+        .astype(int)
+        .pipe(
+            lambda df: (
+                pd.concat(
+                    [
+                        df,
+                        pd.DataFrame(
+                            {
+                                (c, "fraction"): df[c]["advanced"] / df[c].sum(axis=1)
+                                for c in df.columns.get_level_values("emerged").unique()
+                            }
+                        ),
+                    ],
+                    axis=1,
+                )
+            )
+        )
+        .assign(
+            p_value=lambda df: [
+                fisher_exact(
+                    [
+                        [r[("after", "advanced")], r[("after", "stalled")]],
+                        [r[("before", "advanced")], r[("before", "stalled")]],
+                    ],
+                    alternative="greater",
+                )[1]
+                for _, r in df.iterrows()
+            ]
+        )
+        .assign(p_value_neg_log10=lambda df: -np.log10(df["p_value"]))
+        .pipe(
+            lambda df: df.assign(
+                **pd.DataFrame(
+                    [_get_relative_risk(r) for _, r in df.iterrows()], index=df.index
+                )
+            )
+        )
+        .sort_values("p_value_neg_log10", ascending=False)
+        .sort_index(axis="columns")
     )
 
 
