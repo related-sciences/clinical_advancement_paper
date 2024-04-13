@@ -2537,6 +2537,29 @@ def set_default_table_styles(styler: Styler, height_px: int = 250) -> Styler:
     )
 
 
+# TODO: delete if custom colorscales don't end up being used
+# def get_base_colors() -> dict[str, tuple[float, float, float]]:
+#     return {
+#         "red": (252, 37, 92),
+#         "cyan": (28, 195, 227),
+#         "purple": (97, 84, 255),
+#         "yellow": (226, 204, 22),
+#         "grey": (127, 143, 186),
+#     }
+
+# def get_base_hex_colors() -> dict[str, str]:
+#     return {name: mcolors.to_hex(tuple(c/255 for c in rgb)) for name, rgb in get_base_colors().items()}
+
+# def get_colormaps() -> dict[str, mcolors.LinearSegmentedColormap]:
+#     cmaps = {}
+#     for name, rgb in get_base_colors().items():
+#         rgb = np.array(rgb)
+#         colors = [rgb + (255 - rgb) * i / 10 for i in range(11)]
+#         gradient = [tuple(c/255 for c in color) for color in colors[::-1]]
+#         cmaps[name] = mcolors.LinearSegmentedColormap.from_list(f"_{name.title()}s", gradient, N=256)
+#     return cmaps
+
+
 def get_assets_directory() -> Path:
     path = Path(__file__).parent.resolve() / "paper" / "assets"
     if not path.exists():
