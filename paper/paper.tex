@@ -389,7 +389,7 @@ We have demonstrated that simple machine learning methods applied to longitudina
 \section{Discussion}
 \label{sec:discussion}
 
-An important question, that remains difficult to answer, is how much target prioritization methods like the one explored in this study can improve the efficiency of drug discovery. One 2018 estimate suggests that improving success rates from phase 1 to approval by 1.4x (from 9.6\% to 13.8\%) would reduce the median R\&D cost for a \textbf{single drug} by \$480 million USD \cite{PMID:32125404}. If a 2x increase in success rates from phase 1 to approval could be expected when pursuing only genetically validated TD pairs \cite{Nelson2015-eg}, then this would increase to a \$686 million cost savings per drug. Pushing that even further to a 3x or 4x increase by incorporating more lines evidence, as we have done here, would suggest a per-drug cost savings of \$1.03 billion and \$1.37 billion, respectively. These savings would only be realized for drugs tested against targets and diseases with sufficient supporting evidence; however, we show in Section~\ref{sec:results_opportunities} there are more than 8,000 such opportunities (i.e. untested, present-day TD pairs) where at least a 3x improvement in success rates could be expected.
+An important question, that remains difficult to answer, is how much target prioritization methods like the one explored in this study can improve the efficiency of drug discovery. One 2018 estimate suggests that improving success rates from phase 1 to approval by 1.4x (from 9.6\% to 13.8\%) would reduce the median R\&D cost for a \textbf{single drug} by \$480 million USD \cite{PMID:32125404}. If a 2x increase in success rates from phase 1 to approval could be expected when pursuing only genetically validated TD pairs \cite{Nelson2015-eg}, then this would increase to a \$686 million cost savings per drug. Pushing that even further to a 3x or 4x increase by incorporating more lines evidence, as we have done here, would suggest a per-drug cost savings of \$1.03 billion and \$1.37 billion, respectively. These savings would only be realized for drugs tested against targets and diseases with sufficient supporting evidence; however, we show in Section~\ref{sec:results_opportunities} that there are more than 8,000 such opportunities (i.e. untested, present-day TD pairs) where at least a 3x improvement in phase 2 success rates could be expected.
 
 Another way to quantify the impact that employing superior target prioritization strategies could have, is to consider what would happen if this was done across the entire pharmaceutical development industry. Our internal research shows that \$130B (92\%) of global pharma R\&D costs (\$150B) are expended on failed assets each year. This assumes an 8\% success rate that if improved by 3x to 24\%, would lead to a total cost savings of approximately \$22B annually ... (TODO: finish with Adam)
 
@@ -496,12 +496,12 @@ There are a number of limitations and caveats with this study. These include:
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_by_ta.png}
+  \includegraphics[width=1\textwidth]{relative_risk_dist_across_ta.pdf}
   \caption{
-    \textbf{Relative risk scores by method, benchmark and therapeutic area}.
-    The \colorbox{Gainsboro}{average} therapeutic area denotes mean values across all other therapeutic areas except for \colorbox{Gainsboro}{all}, which is an ungrouped estimate across all diseases regardless of therapeutic area. The \colorbox{Gainsboro}{n\_pairs} field indicates the number of TD pairs used to compute the RR estimate in each cell. The \colorbox{Gainsboro}{OTS@N} and \colorbox{Gainsboro}{RDG@N} columns indicate RR estimates for the top \colorbox{Gainsboro}{N} TD pairs from the OTS and RDG methods, respectively.
+    \textbf{Relative risk distributions across select therapeutic areas}.
+    Relative risk point estimates for each of 13 therapeutic areas are shown as dots with boxplots underneath summarizing their distribution. P-values on the bottom margin of the top facet are computed from a one-sided Wilcoxon signed-rank test with the alternative that the RDG model RR average across therapeutic areas exceeds the OTS average at a given number of top ranking TD pairs (on the x-axis).
   }
-  \label{fig:relative_risk_by_ta}
+  \label{fig:relative_risk_dist_across_ta}
 \end{figure}
   
 \pagebreak
@@ -509,12 +509,12 @@ There are a number of limitations and caveats with this study. These include:
 \begin{figure}[H]
   \centering
   \captionsetup{width=.9\linewidth}
-  \includegraphics[width=1\textwidth]{relative_risk_dist_across_ta.pdf}
+  \includegraphics[width=1\textwidth]{relative_risk_by_ta.png}
   \caption{
-    \textbf{Relative risk distributions across select therapeutic areas}.
-    Relative risk point estimates for each of 13 therapeutic areas are shown as dots with boxplots underneath summarizing their distribution. P-values on the bottom margin of the top facet are computed from a one-sided Wilcoxon signed-rank test with the alternative that the RDG model RR average across therapeutic areas exceeds the OTS average at a given number of top ranking TD pairs (on the x-axis).
+    \textbf{Relative risk scores by method, benchmark and therapeutic area}.
+    The \colorbox{Gainsboro}{average} therapeutic area denotes mean values across all other therapeutic areas except for \colorbox{Gainsboro}{all}, which is an ungrouped estimate across all diseases regardless of therapeutic area. The \colorbox{Gainsboro}{n\_pairs} field indicates the number of TD pairs used to compute the RR estimate in each cell. The \colorbox{Gainsboro}{OTS@N} and \colorbox{Gainsboro}{RDG@N} columns indicate RR estimates for the top \colorbox{Gainsboro}{N} TD pairs from the OTS and RDG methods, respectively.
   }
-  \label{fig:relative_risk_dist_across_ta}
+  \label{fig:relative_risk_by_ta}
 \end{figure}
 
 \pagebreak
