@@ -37,6 +37,7 @@ from sklearn.linear_model import LogisticRegressionCV, Ridge
 from sklearn.pipeline import FunctionTransformer, Pipeline, make_pipeline
 from sklearn.preprocessing import MinMaxScaler
 import xrml
+import linear
 
 logger = logging.getLogger(__name__)
 
@@ -1766,11 +1767,17 @@ def get_ridge_regression_pipeline(
     return [
         *([get_imputer(feature_names)] if add_imputer else []),
         *([MinMaxScaler(clip=True)] if add_scaler else []),
-        RidgeRegression(
-            positive=positive,
+        # TODO: re-enable
+        # RidgeRegression(
+        #     positive=positive,
+        #     inference_features=inference_features,
+        #     alpha=1e-6,
+        #     random_state=SEED,
+        # ),
+        linear.ConstrainedLogisticClassifier(
+            positive_features=feature_names if positive else None,
             inference_features=inference_features,
-            alpha=1e-6,
-            random_state=SEED,
+            C=1e6,
         ),
     ]
 
