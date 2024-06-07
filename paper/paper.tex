@@ -115,9 +115,9 @@ Information for each of the features in Table~\ref{tab:features} that are denote
     \end{overpic}
   }
   \caption{
-    \textbf{Evaluation dataset feature presence}.
-    (a) Presence and co-occurrence of select features for overlapping sets of TD pairs. The size of each bar is proportional to the number of TD pairs with a given combination of features and the sort ordering is determined by the number of TD pairs associated with any one feature (show in the right margin). The top margin shows the number of features in any one feature combination and the bottom margin shows the number of TD pairs that are a part of that same combination. There are \evaluationDatasetPairCount\ TD pairs in the evaluation dataset overall.
-    (b) Same as (a) with proportional bar scaling that does not drop beyond a limit necessary to fit all margin labels and combinatorial groupings. Features that are not specific to TD pairs are omitted for brevity, along with the outcome feature used in this study and denoted here with the label "pair has advanced beyond phase 2".
+    \textbf{Evaluation dataset feature presence}. 
+    (a) Presence and co-occurrence of select features for overlapping sets of TD pairs. Each column of the visualization indicates a distinct grouping of TD pairs for which one combination of features is present. The rows denote features and the existence of any color bar other than white or grey indicates that the feature is present. For example, the first column from left-to-right shows that there are 4,295 TD pairs in the evaluation dataset with \textbf{only} target-specific and disease-specific clinical evidence (phase 2+ trials); i.e. no evidence exists that is specific to the TD pair for those cases. The size of each bar within a column is proportional to the number of TD pairs with that combination of features, and the sort ordering is determined by the number of TD pairs associated with any one feature (show in the right margin). The top margin shows the number of features in any one feature combination and the bottom margin shows the number of TD pairs that are a part of that same combination. There are \evaluationDatasetPairCount\ TD pairs in the evaluation dataset overall.
+    (b) Same as (a) with proportional bar scaling that does not drop beyond a limit necessary to fit all margin labels and combinatorial groupings. Features that are not specific to TD pairs are omitted for brevity, along with the outcome feature used in this study and denoted here with the label "pair has advanced beyond phase 2". For more details on the origin and interpretation of these plots, see supervenn \cite{supervenn}.
   }
   \label{fig:feature_presence}
 \end{figure}
@@ -162,7 +162,7 @@ and RR metrics reported for univariate methods based on Open Targets scores for 
   \frac{P(advancement | score > 0)}{P(advancement | score = 0)}.
 \end{equation}
 
-The use of such a metric is essential for properly assessing performance in this forecasting problem. While we also report more common measures of classifier performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), neither of these adequately capture behavior in the upper extremes of rankings due the sparsity with which TD pair evidence is present for pairs that have ever entered phase 2 trials. This sparsity is further exacerbated in this study by the constraint that most of that evidence must have existed \textit{before} such trials began. For more details on the extent of this sparsity, see Section~\ref{sec:features}. The figure presented there, Figure~\ref{fig:feature_presence}, also demonstrates that a substantial fraction (78\%) of TD pairs that ultimately advance beyond phase 2 trials have targets and/or diseases with prior clinical validation despite no direct evidence linking the pairs themselves, which means a comprehensive measure of classifier performance (e.g. ROC) is far more likely to reflect the extent to which disease-only historical, clinical information or target-only information -- including other attributes like conservation and tissue expression -- can predict clinical success. Again, this is not our primary focus as we want to evaluate the maximum achievable performance in this forecasting problem, and we assert that this is best accomplished when one or more lines of target-disease-specific evidence are present.
+The use of such a metric is essential for properly assessing performance in this forecasting problem. While we also report more common measures of classifier performance like Receiver Operating Characteristic (ROC) and Average Precision (PR), neither of these adequately capture behavior in the upper extremes of rankings due to the sparsity with which TD pair evidence is present for pairs that have ever entered phase 2 trials. This sparsity is further exacerbated in this study by the constraint that most of that evidence must have existed \textit{before} such trials began. For more details on the extent of this sparsity, see Section~\ref{sec:features}. The figure presented there, Figure~\ref{fig:feature_presence}, also demonstrates that a substantial fraction (78\%) of TD pairs that ultimately advance beyond phase 2 trials have targets and/or diseases with prior clinical validation despite no direct evidence linking the pairs themselves, which means a comprehensive measure of classifier performance (e.g. ROC) is far more likely to reflect the extent to which disease-only historical, clinical information or target-only information -- including other attributes like conservation and tissue expression -- can predict clinical success. Again, this is not our primary focus as we want to evaluate the maximum achievable performance in this forecasting problem, and we assert that this is best accomplished when one or more lines of target-disease-specific evidence are present.
 
 Reasonable alternative choices for this primary metric include those more common in information extraction literature or other machine learning studies with a focus on ranking rather than classification, such as mean reciprocal rank (MRR), precision at $k$ (P@k) and normalized discounted cumulative gain (NDCG) \cite{hoyt2022unified,moffat2022batch}. Precision at $k$ is the most similar among these to relative risk at $k$ since it is equivalent to the numerator in the relative risk calculation. We use relative risk instead because it is more intuitive than most ranking metrics, has well established analytical solutions for confidence intervals \cite{Katz1978-mo} and is consistent with prior work in this field.
 
@@ -290,7 +290,7 @@ The coefficients learned by the RDG model, and the average effects they have acr
   \end{overpic}
   \caption{
     \textbf{RDG model feature effects}. 
-    (a) Feature average effects calculated as the mean of the product between a coefficient and a particular feature value, when that feature is present and non-negative (i.e. when it has any influence). Only the evaluation dataset is used to compute this average.
+    (a) Feature average effects calculated as the mean of the product between a coefficient and a particular feature value, when that feature is present and non-negative (i.e. when it has any influence). Only the evaluation dataset is used to compute this average. The prefixes \colorbox{Gainsboro}{target}, \colorbox{Gainsboro}{disease} and \colorbox{Gainsboro}{target\_disease} are used to denote features that are specific to targets, diseases and target-disease pairs (respectively).
     (b) Feature coefficients, which are equivalent to the maximum effect that a feature can have due to all features being defined on the range [0, 1] or rescaled to it.
   }
 	\label{fig:effect_sizes}
@@ -313,11 +313,22 @@ A common method for identifying druggable opportunities within a specific diseas
     \put(100, 53) {(a)}
     \put(100, 41) {(b)}
     \put(100, 19) {(c)}
-    \put(50, 51){\color{black}\vector(0, -1){5}}
-    \put(74, 39){\color{black}\vector(0, -1){4.5}}
+    % Top section
     \put(13.5, 58){\sffamily \fontsize{8pt}{12pt}\selectfont Of 2.53M TD pairs with evidence linking them, 2.46M have never been in clinical trials.}
+    \put(40, 57.5){\color{black}\line(0, -10){4}}
+    \put(40, 53.5){\color{black}\line(4, 0){4}}
+    \put(50, 51){\color{black}\vector(0, -1){5}}
+    % Middle section
     \put(13.5, 35.8){\sffamily \fontsize{8pt}{12pt}\selectfont Of 2.46M undeveloped pairs, the top 0.8\% are 2.07x+ more likely to advance.}
+    \put(33, 37.5){\color{black}\line(0, 10){4}}
+    \put(33, 41.5){\color{black}\line(3, 0){3}}
+    \put(74, 39){\color{black}\vector(0, -1){4.5}}
+    % Bottom section
     \put(13.5, 1.8){\sffamily \fontsize{8pt}{12pt}\selectfont Of 8,560 pairs 2.93x+ more likely to advance, 2,408 have clinical small molecule targets (e.g.).}
+    \put(82, 23){\color{black}\line(5, 0){5}}
+    \put(87, 23){\color{black}\line(0, -21){21}}
+    \put(85, 2){\color{black}\line(2, 0){2}}
+    % \put(33, 41.5){\color{black}\line(3, 0){3}}
   \end{overpic}
   \caption{
     \textbf{Present-day target-disease pair ranking funnel}.
@@ -328,7 +339,7 @@ A common method for identifying druggable opportunities within a specific diseas
   \label{fig:opportunity_funnel}
 \end{figure}
 
-Figure~\ref{fig:opportunity_funnel} demonstrates this process visually, starting from the space of all present-day TD pairs. This funnel implies there are thousands of TD pairs that 1) have never been tested in clinical trials before, 2) have a 3x (RR=2.93) higher likelihood of advancing past phase 2 trials and 3) have a target that \textbf{has} been tested clinically (in at least phase 1 trials) for one or more of the modalities highlighted. In other words, there are $\sim$2,400 small-molecule-enabled, $\sim$1,400 antibody-enabled, and 14 PROTAC-enabled TD pairs at the bottom of the funnel where the implied opportunity is greatest. Examples of antibody-enabled TD pairs are shown in Supplementary~Figure~\ref{fig:top_opportunity_predictions} along with their corresponding genetic and clinical support.
+Figure~\ref{fig:opportunity_funnel} demonstrates this process visually, starting from the space of all present-day TD pairs. This funnel implies there are thousands of TD pairs that 1) have never been tested in clinical trials before, 2) have a 3x (RR=2.93) higher likelihood of advancing past phase 2 trials and 3) have a target that \textbf{has} been tested clinically (in at least phase 1 trials) for one or more of the modalities highlighted. In other words, there are $\sim$2,400 small-molecule-enabled, $\sim$1,400 antibody-enabled, and 14 PROTAC-enabled TD pairs at the bottom of the funnel where the implied opportunity is greatest. Examples of antibody-enabled TD pairs are shown in Supplementary~Figure~\ref{fig:top_opportunity_predictions} along with their corresponding genetic and clinical support. Note that these are intentionally not curated or filtered in order to capture rankings as they would be seen for the corresponding version of Open Targets (23.12). This is discussed more in Section~\ref{sec:limitations}.
 
 For similar statistics by therapeutic area, rather than across all of them as in Figure~\ref{fig:opportunity_funnel}, see Supplementary~Figure~\ref{fig:opportunity_summary}. This also shows TD pair counts for trial phases omitted from Figure~\ref{fig:opportunity_funnel}.
 
