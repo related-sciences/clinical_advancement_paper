@@ -1,10 +1,13 @@
 ### Overview
 
-This repository contains the code necessary to create the paper first discussed in https://github.com/related-sciences/facets/issues/3611#issuecomment-1873479582.
+This repository contains the code necessary to collect the data, run the analysis and render the figures/text for the paper at (TODO: add biorxiv link). Other notes:
 
-The most recently rendered version of the paper is at [paper.pdf](paper/paper.pdf).
+- All of the analysis is in a single notebook at [analysis.ipynb](analysis.ipynb).
+- Logic for collecting and preparing Open Targets data is in the module [analysis.py](analysis.py) (more specifically [here](https://github.com/related-sciences/clinical_advancement_paper/blob/5ad0e5cec1aa304209bb01bd47366442b013f306/analysis.py#L121-L816)).
+- The most recently rendered version of the paper is at [paper/paper.pdf](paper/paper.pdf).
+- The [xrml.py](xrml.py) module is a frozen, near-replica of https://github.com/related-sciences/xrml
 
-### Execution
+### Reproduction
 
 Here are commands necessary to reproduce this analysis:
 
