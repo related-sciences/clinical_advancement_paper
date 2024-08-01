@@ -1,6 +1,8 @@
 ### Overview
 
-This repository contains the code necessary to collect the data, run the analysis and render the figures/text for the paper at (TODO: add biorxiv link). Other notes:
+This repository contains the code necessary to collect the data, run the analysis and render the figures/text for the paper at (TODO: add biorxiv link). 
+
+Highlights:
 
 - All of the analysis is in a single notebook at [analysis.ipynb](analysis.ipynb).
 - Logic for collecting and preparing Open Targets data is in the module [analysis.py](analysis.py) (more specifically [here](https://github.com/related-sciences/clinical_advancement_paper/blob/5ad0e5cec1aa304209bb01bd47366442b013f306/analysis.py#L121-L816)).
